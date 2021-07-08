@@ -1,0 +1,59 @@
+---
+title: "Letecka doprava"
+author: "Marek"
+date: "February 19, 2019"
+output: html_document
+---
+**Dáta v súbore AIRPASS.DAT predstavujú počet pasažierov prepravených leteckou dopravou za obdobie JAN 1949 - Dec 1960.**
+
+# Načítanie dát
+```{r}
+AIRPASS <- read.table("AIRPASS.DAT", quote="\"", comment.char="")
+ str(AIRPASS)
+```
+
+# Načítanie dát do premennej "let_data"
+```{r}
+let_data<-AIRPASS$V1
+```
+
+# Zobrazenie časového radu
+```{r}
+plot(let_data)
+```
+
+
+# Zobrazenie časového radu - iné parametre
+```{r fig.width=9}
+plot(let_data, type = "o", main = "Letecké dáta (JAN 1949 - Dec 1960)", xlab = "Čas", ylab = "Počet pasažierov")
+plot(let_data, type = "b", main = "Letecké dáta (JAN 1949 - Dec 1960)", xlab = "Čas", ylab = "Počet pasažierov")
+plot(let_data, type = "h", main = "Letecké dáta (JAN 1949 - Dec 1960)", xlab = "Čas", ylab = "Počet pasažierov")
+```
+
+**Základný krok pri analýze časových radov je zostrojiť graf časového radu a skúmať, či obsahuje:**
+
+1. trend - dlhodobé správanie sa časového radu (rast, pokles, stagnácia)
+2. sezónnu zložku - pravidelné kolísanie hodnôt okolo trendu s určitou periódou (ročné obdobia, prázdniny, sviatkov, kultúrnych zvykov)
+3. epizodická zložka - očividná, ostrá zmena v správaní, nepredvídateľný odklon od dlhodobého trendu v dôsledku nejakej udalosti (e.g. zemetrasenie, vojna, štrajk)
+4. odľahlé merania/hodnoty - napr. chyby, zle namerané hodnoty
+5. cyklická zložka - opakuje sa ale perióda je väčšia ako jeden rok
+ 
+ **Popis nášho časového radu:**
+ 
+ * rastúci trend - nie celkom lineárny
+ * výrazná sezónna zložka - maximá predstavujú Júl, August a minimá v November
+ * bez odľahlých meraní
+ * rastúca variabilita - nemáme stacionárny rad
+ * bez epizodickej zložky
+ 
+ 
+ # Dáta ako časový rad
+ Využijeme príkaz TS - time series.
+```{r}
+letec <- ts(let_data, start = 1949, frequency = 12)
+letec
+plot(letec, type = "o", main = "Letecké dáta (JAN 1949 - Dec 1960)", xlab = "Čas", ylab = "Počet pasažierov")
+```
+ 
+ 
+ 

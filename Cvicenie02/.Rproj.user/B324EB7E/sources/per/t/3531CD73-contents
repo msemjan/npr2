@@ -1,0 +1,27 @@
+---
+title: "Populácia rysa kanadského"
+output: html_document
+---
+**Dáta v dátovom súbore LYNX.DAT predstavujú počet jedincov rysa kanadského v období 1821-1934**
+
+####Načítanie dát
+```{r}
+LYNX <- read.table("LYNX.DAT")
+str(LYNX)
+```
+
+####Načítanie reálnych časových okamihov do samostatnej premennej
+
+
+```{r}
+lynxData <- LYNX$V1
+t <- 1821:1934
+```
+
+#### Zobrazenie časového radu a priamky cez priemer
+Príkaz abline(a,b) vloží do posledného grafu priamku s koeficientami $a$ a $b$ v tvare $y = a + bx$. 
+```{r}
+plot(t, lynxData, type = 'o', pch=20 , xlab = 'Roky', ylab = 'Počet', col = 'green')
+abline(mean(lynxData), 0)
+```
+

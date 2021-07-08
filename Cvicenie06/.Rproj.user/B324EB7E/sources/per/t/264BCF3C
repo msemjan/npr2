@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1553605414084.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2688229267",
+    "id" : "264BCF3C",
+    "lastKnownWriteTime" : 1553607887,
+    "last_content_update" : 1553607887416,
+    "path" : "~/dev/npr2/Cvicenie06/acf.Rmd",
+    "project_path" : "acf.Rmd",
+    "properties" : {
+        "cursorPosition" : "122,0",
+        "scrollLine" : "109",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

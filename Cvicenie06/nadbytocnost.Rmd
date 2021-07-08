@@ -1,0 +1,26 @@
+---
+title: "Nadbytočnosť parametrov"
+author: "Marek"
+date: "March 26, 2019"
+output: html_document
+---
+
+# Úloha
+Majme proces $$X_t = 0.5X_{t-1} - 0.5Z_{t-1} + Z_t$$. Jedná sa o ARMA(1,1) s koeficientami $\phi = 0.5$ a $\theta = -0.5$
+Znázornite ACF takéhoto procesu.
+
+```{r}
+h = 0:40
+acfARMA11 <- ARMAacf(ar =-0.5, ma = 0.5 ,40, pacf = FALSE)
+plot(acfARMA11, type = 'h', main = 'PACF pre ARMA(1,1)')
+```
+
+**Pozorovanie:** Vidíme, že okrem $h = 0$ nie sú hodnoty nijako skorelované, čiže sa v podstate jedná o biely šum! Musí teda byť možné ho prepísť do takého tvaru.
+
+$$ (1-0.5B)X_t = (1-0.5B)Z_t$$
+kde označíme $\phi(z) = (1-0.5z)$ a $\theta(z) = (1-0.5z)$, a teda sú rovnaké. Obdobný problém nastáva, ak majú oba polynómy nejaký spoločný koreň $\alpha$ a možno zjednodušovať. Dochádza k nadbytočnosti parametrov. Treba ho odstrániť:
+$$\phi(z) = (z-\alpha) \phi^*(z)$$
+$$\theta(z) = (z-\alpha) \theta^*(z)$$
+
+Preto vo vete z prednášky bol predpoklad, že polynómy nemajú spoločný koreň. A vo všetkých vetách o ARMA procesoch sa implicitne bude predpokladať (aj tých, čo sme už mali), že nemajú spoločné korene.
+

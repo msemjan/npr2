@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1552395869027.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3914319400",
+    "id" : "D52A49F0",
+    "lastKnownWriteTime" : 1552397455,
+    "last_content_update" : 1552397455546,
+    "path" : "~/dev/npr2/Cvicenie04/co2.Rmd",
+    "project_path" : "co2.Rmd",
+    "properties" : {
+        "cursorPosition" : "57,22",
+        "scrollLine" : "40",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1557138200758.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3615592030",
+    "id" : "253ABAAF",
+    "lastKnownWriteTime" : 1557140779,
+    "last_content_update" : 1557140779016,
+    "path" : "~/dev/npr2/Cvicenie11-12/Benzin.Rmd",
+    "project_path" : "Benzin.Rmd",
+    "properties" : {
+        "cursorPosition" : "142,55",
+        "scrollLine" : "124"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

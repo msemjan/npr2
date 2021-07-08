@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551792187106.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "E5D499C",
+    "lastKnownWriteTime" : 1302123110782205952,
+    "last_content_update" : 1551792187106,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "D751B48A",
+        "caption" : "USPOP",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=USPOP&cache_key=D751B48A",
+        "displayedObservations" : "21",
+        "environment" : "",
+        "object" : "USPOP",
+        "preview" : "0",
+        "totalObservations" : "21",
+        "variables" : "2"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

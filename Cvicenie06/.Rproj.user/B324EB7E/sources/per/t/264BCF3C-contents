@@ -1,0 +1,127 @@
+---
+title: "Teoretická ACF"
+author: "Marek"
+date: "March 26, 2019"
+output: html_document
+---
+
+# Teoretická ACF
+## Definícia ACF
+
+$$\varrho(h) = \frac{\gamma(h)}{\gamma(0)} = Cor(X_{t+h},X_t)$$
+
+Vyjadruje nám previazanosť súčastných a minulých hodnôt.
+
+## Znázornenie ACF
+### Biely šum
+Majme proces $X_t = Z_t$, kde $Z_t \sim WN(0, \sigma^2) $. Jeho ACF má tvar:
+$$\varrho(h) = 1, h =0$$
+a 
+$$\varrho(h) = 0, h \neq0$$
+```{r}
+h = 0:40
+acfWN <- ARMAacf(ar = 0, ma = 0,40)
+plot(h, acfWN, type = 'h', main = 'ACF pre WN')
+```
+
+Vidíme, že máme rad nekorelovaných veličín. 
+
+### MA(1) proces
+Majme proces $X_t$ v tvare:
+$$ X_t = Z_t + \theta Z_{t-1}$$
+Potom jeho ACF má tvar:
+$$\varrho(h) = 1, h =0$$
+a 
+$$\varrho(h) = 0, h \neq0,1$$
+a 
+$$\varrho(h) = \frac{\theta}{1+\theta^2}, h = 1$$
+
+```{r}
+h = 0:40
+acfMA1 <- ARMAacf(ar = 0, ma =0.5,40)
+plot(h, acfMA1, type = 'h', main = 'ACF pre MA(1)')
+```
+
+### MA(2) proces
+Majme proces $X_t$ v tvare:
+$$ X_t = Z_t + \theta_1 Z_{t-1} + \theta_2 Z_{t-2}$$
+Potom jeho ACF môže vyzerať aj takto:
+
+```{r}
+h = 0:40
+acfMA2 <- ARMAacf(ar = 0, ma = c(0.5,0.7),40)
+plot(h, acfMA2, type = 'h', main = 'ACF pre MA(2)')
+```
+
+Vidíme dve nenulové hodnoty (okrem $h = 0$), čo nám napovedá, že je to MA(2) proces
+
+### MA(6) proces
+Majme proces $X_t$ v tvare:
+$$ X_t = Z_t + \theta_1 Z_{t-1} + \theta_2 Z_{t-2}$$
+Potom jeho ACF môže vyzerať aj takto:
+
+```{r}
+h = 0:40
+acfMA6 <- ARMAacf(ar = 0, ma = c(0.9,0.9,0.7,0.5,0.3, 0.1),40)
+plot(h, acfMA6, type = 'h', main = 'ACF pre MA(6)')
+```
+
+
+### AR(1) proces
+Majme proces $X_t$ v tvare:
+$$ X_t + \phi X_{t-1} = Z_t$$
+Jeho ACF má tvar:
+$$\varrho(h) = \phi^{|h|}$$,
+kde $h\in \mathcal{Z}$
+Potom jeho ACF môže vyzerať aj takto:
+
+```{r}
+h = 0:40
+acfAR1 <- ARMAacf(ar =0.80, ma = 0,40)
+plot(h, acfAR1, type = 'h', main = 'ACF pre AR(1)')
+```
+
+### AR(2) proces
+Majme proces $X_t$ v tvare:
+$$ X_t + \phi_1 X_{t-1} + \phi_2 X_{t-2} = Z_t$$
+Potom jeho ACF môže vyzerať aj takto:
+
+```{r}
+h = 0:40
+acfAR2 <- ARMAacf(ar =c(1.30, -0.6), ma = 0,40)
+plot(h, acfAR2, type = 'h', main = 'ACF pre AR(2)')
+```
+
+Dochádza ku striedaniu pozitívnych a negatívnych korelácií. 
+
+### Iný AR(2) proces
+
+```{r}
+h = 0:40
+acfAR22 <- ARMAacf(ar =c(-1.80, -0.81), ma = 0,40)
+plot(h, acfAR22, type = 'h', main = 'ACF pre AR(2)')
+```
+
+Tento nebol kauzálny, o čom sme sa mohli presvedčiť výpočtom príkladu na domácu úlohu. Pre AR procesy sme nevedeli odhaliť rád z priebehu ACF a tak sme si zadefinovali PACF.
+
+# PACF - Parciálna ACF
+Jej  význam je: $\alpha(0) = 1$ definitoricky a $\alpha(1) = Cor(X_{t+1},X_t)$, všeobecne: $$ \alpha(h) = Cor(X_{t+h}-\hat{X}_{t+h},X_{t}-\hat{X}_{t} )$$
+Pre AR(p) platí, že $\alpha(h) = 0$ pre $h > p$. PACF ja ACF očistená o vplyv zložiek pred nimi...
+
+## PACF pre AR(2)
+```{r}
+h = 0:40
+pacfAR2 <- ARMAacf(ar =c(1.30, -0.6), ma = 0,40, pacf = TRUE)
+plot(pacfAR2, type = 'h', main = 'PACF pre AR(2)')
+```
+
+# ARMA(1,1)
+Proces v tvare $$ X_t + \phi X_{t-1} = Z_t + \theta Z_{t-1} $$
+Jej ACF má tvar: $$\varrho(h) = \phi{h-1}\frac{\gamma(h)}{\gamma(0)}$$.
+
+## PACF pre ARMA(1,1)
+```{r}
+h = 0:40
+pacfARMA11 <- ARMAacf(ar =0.8, ma = 0.5 ,40, pacf = TRUE)
+plot(pacfARMA11, type = 'h', main = 'PACF pre ARMA(1,1)')
+```

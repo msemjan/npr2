@@ -1,0 +1,85 @@
+---
+title: "Hurónske jazero - kompletný model"
+output: html_document
+---
+
+####Úloha: Nájdite model pre ČR výšky hladiny Hurónskeho jazera.
+
+####Znázornenie dát popisujúcich výšku hladiny Hurónskeho jazera, model pre trend a nájdenie reziduí
+```{r fig.width=9, fig.height=5}
+LAKE <- read.table("LAKE.DAT")
+lakedata<-LAKE$V1
+roky<-1875:1972
+plot(roky,lakedata, type = "o", main = "Výška hladiny Hurónskeho jazera v období 1875-1972", ylab="výška nad 570 stôp ", col="blue", pch=22)
+trendLake<-lm(lakedata~roky)
+abline(trendLake, col="red", lwd=3)
+reziduaLake<-residuals(trendLake)
+plot(roky,reziduaLake, type="o", main = "Reziduá po lineárnom trende ČR hladiny Hurónskeho jazera")
+abline(0,0)
+
+```
+
+####Úloha: zapíšte čiastočný model ČR
+Pri reziduách sme skonštatovali, že ešte nie sú nezávislé, lebo sú čiastočne skorelované a za veľkou hodnotou nebude nasledovať malá. Pozrieme sa na summary():
+```{r}
+summary(trendLake)
+```
+Z toho vieme písať čiastočný model ČR:
+$$X(t) = 55.55 - 0.024t + Y(t)$$
+
+####Model pre reziduá
+Teraz potrebujeme nájsť model pre reziduá. Bude užitočné nájsť ACF a PACF.
+
+```{r}
+acfLake <- acf(reziduaLake)
+```
+
+ACF nám naznačuje, že by to mohol byť MA(2) alebo MA(3) proces.
+
+```{r}
+pacfLake <- pacf(reziduaLake)
+```
+
+PACF naznačuje možnosť, že by to mohol byť aj AR(1) alebo AR(2).
+
+Ktorý si vybrať? Záleží to na nás. Vo všeobecnosti je lepší model ten, ktorý má menej koeficientov, čo je v tomto prípade AR(2). Budeme ho hľadať v tvare:
+$$Y_{t} - \phi_1Y_{t-1} - \phi_2Y_{t-2} = Z_t$$
+kde $Z_t\sim WN(0,\sigma^2)$.
+
+```{r}
+modelAR2 <- ar.ols(reziduaLake, aic = F, order.max = 2, intercept = F)
+modelAR2
+```
+
+Príkaz nám vráti koeficienty $\phi_1$ a $\phi_2$ ale aj odhad $\sigma$. Ak mu nezadáme order.max, tak sa softvér sám pokúsi ho odhadnúť, častokrát nie veľmi úspešne. Parameter intercept=F spôsobí, že nebudeme mať $\phi_0$.
+
+Poďme sa pozrieť na reziduá modelu.
+```{r}
+reziduaAR2 <- modelAR2$resid
+plot(reziduaAR2, main = 'Reziduá AR(2) modelu', col = 'blue', type = 'o')
+abline(0,0, col = 'red')
+```
+
+Teraz by už mohli byť aj náhodné... Ale stále ich musíme otestovať! Chýbajú nám prvé dve hodnoty na počítanie - máme rekurzívny vzťah. To je problém pri počítaní.
+```{r}
+acf2Res <-modelAR2$resid[3:length(reziduaAR2)]
+acf(acf2Res, 40)
+pacf(acf2Res, 40)
+Box.test(acf2Res)
+Box.test(acf2Res, type = 'Ljung')
+```
+
+Teraz to už vyzerá dobre.
+
+```{r}
+hist(acf2Res)
+shapiro.test(acf2Res)
+```
+
+Reziduá sú Gaussovsky rozložené, čo sme chceli. 
+
+**Výsledný model:**
+
+$$X(t)=55,55-0,024\cdot t+Y(t)$$
+$$Y_t=1,0020Y_{t-1}-0,2834Y_{t-2}+Z_t$$
+$$Z_t\sim \mathrm{WN}(0, \sigma^2), \quad \hat{\sigma}^2=0,4436$$

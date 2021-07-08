@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"Periodogram\"\noutput: html_document\n---\n\nDáta v súbore Napatie.txt predstavujú signál napätia v sieti.\n\n####Načítanie a zobrazenie dát\n```{r fig.width=9}\nNapatie <- read.csv2(\"Napatie.txt\", sep=\"\")\nstr(Napatie)\nSignal<-Napatie$Signal\nt<-1:500\nplot(t,Signal,type=\"l\",ylim=c(-20,20), xlab=\"čas\",ylab=\"napätie\", main = \"Signál napätia v elektrickej sieti\")\nabline(0,0)\n```\n\n####Pozorovanie\n\n\n\n####Analýza reziduí\n\n\n\n\n####Periodogram v R\nNa výpočet a znázornenie periodogramu je v R príkaz spec.pgram\n\n\n####Nájdenie modelu periodickej zložky v tvare $\\beta_1\\mathrm{cos}\\left(\\dfrac{2\\pi }{50}t\\right)+\\beta_2\\mathrm{sin}\\left(\\dfrac{2\\pi}{50}t\\right)$\n\n####Reziduá\n\n\n####Analýza reziduí\n\n\n####Zápis kompletného modelu\n\n\n\n\n####Overenie odhadu smerodajnej odchýlky reziduí\n\n",
+    "created" : 1460444464576.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "500863356",
+    "id" : "F8C60CF4",
+    "lastKnownWriteTime" : 1460445053,
+    "last_content_update" : 1460445053907,
+    "path" : "F:/Google disk/Vyucba/Nahodne procesy/NPR2 cvicenia v RStudiu/cvicenie 08 studenti/Signal.Rmd",
+    "project_path" : "Signal.Rmd",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

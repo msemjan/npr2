@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551788867916.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1163078960",
+    "id" : "36EEE6FD",
+    "lastKnownWriteTime" : 1551792004,
+    "last_content_update" : 1551792004445,
+    "path" : "~/dev/npr2/Cvicenie03/Generovanie procesov.Rmd",
+    "project_path" : "Generovanie procesov.Rmd",
+    "properties" : {
+        "cursorPosition" : "126,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

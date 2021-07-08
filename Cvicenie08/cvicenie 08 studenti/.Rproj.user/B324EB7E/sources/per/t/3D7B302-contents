@@ -1,0 +1,123 @@
+---
+title: "Periodogram"
+output: html_document
+---
+
+Dáta v súbore Napatie.txt predstavujú signál napätia v sieti.
+
+####Načítanie a zobrazenie dát
+```{r fig.width=9}
+Napatie <- read.csv2("Napatie.txt", sep="")
+str(Napatie)
+Signal<-Napatie$Signal
+t<-1:500
+plot(t,Signal,type="l",ylim=c(-20,20), xlab="čas",ylab="napätie", main = "Signál napätia v elektrickej sieti")
+abline(0,0)
+```
+
+####Pozorovanie
+
+- variabilita ustálená
+- sezónna zložka
+- rad je zrejme ustálený
+- vyzerá to na nejakú periodickú zložku
+
+####Analýza reziduí
+
+```{r}
+acf(Signal, 40)
+pacf(Signal, 40)
+Box.test(Signal)
+Box.test(Signal, type = 'Ljung')
+
+#resSignal <- residuals(Signal)
+#plot(resSignal, main = 'Reziduá', xlab = 'čas')
+```
+
+**ACF a PACF:** Nenaznačujú žiaden model, dáta sú však stále nejako závislé. 
+
+**Box testy:** Zamietajú hypotézu o nezávislosti dát. Dáta sú závislé.
+
+Analýza v časovej oblasti nám teda neodhalila nič zaujímavé a tak skúsime analýzu vo *frekvenčnej oblasti*. 
+
+####Periodogram v R
+Periodogram:
+$$I(\lambda) = \frac{1}{n}|\sum_{t=1}^{\mu}X_t e^{-i\lambda t}|^2$$
+Táto funkcia je odhadom násobku spektrálnej hustoty $2\pi f(\lambda)$. Funguje to však len vo frekvenciách $\lambda_k = \frac{2\pi k}{n}$; $\lambda \in <0; \pi>$.
+
+V našom prípade máme 500 hodnôt, takže prejdeme cez všetky hodnoty:
+$$\lambda_1 = 2\pi/500, \lambda_2 = 2\pi\cdot2/500, ... $$
+
+Na výpočet a znázornenie periodogramu je v R príkaz spec.pgram
+
+Príkaz normálne spraví logaritmus periodogramu, to potlačíme možnosťou log = FALSE
+```{r}
+signalPeriod <- spec.pgram(Signal, log="no")
+signalPeriod
+```
+
+Výstup je grafický ale výpisom môžeme ľahko zistiť významné frekvencie. Vidíme, že signalPeriod\$freq obsahuje iba $1/k$, $2\pi$ si musíme domyslieť. Najväčšie maximum v periodograme zodpovedá desiatej hodnote: $2\pi\cdot10/500 = 2\pi/50 = 2\pi\cdot0.02$. Keďže máme len jednu významnú frekvencie, naznačuje nám to použitie modelu $$\beta_1\mathrm{cos}\left(\dfrac{2\pi}{50}t\right)+\beta_2\mathrm{sin}\left(\dfrac{2\pi}{50}t\right)$$
+
+
+####Nájdenie modelu periodickej zložky v tvare $\beta_1\mathrm{cos}\left(\dfrac{2\pi }{50}t\right)+\beta_2\mathrm{sin}\left(\dfrac{2\pi}{50}t\right)$
+```{r}
+t <- 1:length(Signal)
+sint = sin(2*pi*t/50)
+cost = cos(2*pi*t/50)
+
+modelSignal = lm(Signal~sint+cost)
+plot(t,Signal,type="l",ylim=c(-20,20), xlab="čas",ylab="napätie", main = "Signál napätia v elektrickej sieti")
+lines(t, predict(modelSignal), col = 'red')
+```
+
+Je toto dostatočné? Vieme, že reziduá už sú už nezávislé? 
+
+####Reziduá
+```{r}
+resSignal <- residuals(modelSignal)
+plot(resSignal, main = 'Reziduá', col = 'red', type = 'l')
+```
+
+
+####Analýza reziduí
+```{r}
+acf(resSignal, 40)
+Box.test(resSignal)
+Box.test(resSignal, type = 'Ljung')
+```
+
+**Závery:** IID-test tvrdí, že dáta sú nezávislé. Box testy nezamietajú nulovú hypotézu. Stačí nám teda uvažovať iba tú jednu frekvenciu. 
+
+Ešte by nás mohlo zaujímať z akého rozdelenia sú reziduá. Ak by boli z normálneho rozdelenia, tak vieme robiť nejaké intervaly spoľahlivosti. Prvý náznak, že sú z normálneho rozdelenia dostaneme z pohľadu na histogram. Taktiež môžeme využiť **Shapiro-Wilk test normality**: Nulová hypotéza je, že máme normálne rozdelenie.
+ 
+ 
+```{r}
+hist(resSignal)
+shapiro.test(resSignal)
+```
+ 
+Z histogramu vidíme, že dáta by mohli byť z normálneho rozdelenia, Shapiro-Wilk test nám tiež nedáva dôvod zamietať hypotézu o normalite, a tak môžeme zapísať model. 
+
+####Zápis kompletného modelu
+```{r}
+summary(modelSignal)
+```
+
+Intercept nie je dôležitý, takže môžeme brať model bez absolútneho člena.
+
+$$X(t)=-2.22824 \cdot \mathrm{sin}\left(\dfrac{2\pi}{50}t\right) - 0.93715 \cdot \mathrm{cos}\left(\dfrac{2\pi }{50}t\right) + Z_t,$$
+kde $Z_t \sim WN(0,\sigma^2)$ a $\hat{\sigma}=4.991$
+
+Testy majú zmysel len ak naše reziduá sú normálne rozdelené, čo sme aj overili.  $Z_t \sim N(0,\sigma^2)$
+
+####Overenie odhadu smerodajnej odchýlky reziduí
+
+$$SSE = \sqrt{\frac{\sum_i(y_i-\hat{y_i})^2}{n-k}}$$
+kde $y_i$ sú skutočné dáta, $\hat{y_i}$ je fit, $y_i-\hat{y_i}$ sú reziduá, $n$ je počet dát a $k$ je počet parametrov.
+
+```{r}
+SSE <- sqrt(sum(resSignal^2)/(length(Signal)-3))
+SSE
+```
+
+

@@ -1,0 +1,86 @@
+---
+title: "Pád loptičky"
+output: html_document
+---
+
+**Dáta v súbore PAD.txt predstavujú časový rad výšok loptičky nad zemou voľne spustenej zo 7. poschodia. Počítač zaznamenával výšky loptičky každých 5 stotín sekundy.**
+
+**Úloha:** Nájdite model pre daný ČR a urobte predikciu pre nasledujúcich 5 časových okamihov.
+
+####Načítanie dát
+```{r}
+PAD <- read.delim2("PAD.txt")
+str(PAD)
+Vyska<-PAD$Vyska
+Cas<-PAD$Cas
+```
+
+
+####Zobrazenie dát
+```{r fig.width=9}
+plot(Cas, Vyska, type = "o", main="Záznam pádu loptičky", xlab="Čas", ylab = "Výška loptičky nad zemou")
+```
+
+####Pozorovanie
+* klesajúci - asi kvadratický trend
+* bez sezónnej zložky, extrémnych hodnôt
+* ustálená, takmer žiadna variabilita
+
+####Nájdenie rovnice kvadratického trendu
+```{r fig.width=9}
+Cas2<-Cas*Cas
+trend<-lm(Vyska~Cas+Cas2)
+plot(Cas, Vyska, type = "o", main="Záznam pádu loptičky", xlab="Čas", ylab = "Výška loptičky nad zemou")
+lines(Cas, predict(trend), col="red", lwd=3)
+summary(trend)
+```
+
+
+####Analýza reziduí
+```{r fig.width=9}
+reziduaPad<-residuals(trend)
+plot(reziduaPad, type="o",main="Reziduá pre ČR výšok loptičky nad zemou" ) 
+abline(0,0)
+acf(reziduaPad, 40)
+pacf(reziduaPad, 40)
+Box.test(reziduaPad)
+Box.test(reziduaPad, type="Ljung")
+```
+
+####Model pre reziduá
+```{r}
+hist(reziduaPad)
+shapiro.test(reziduaPad)
+```
+
+
+Reziduá možno považovať za nezávislé (acf, pacf, Box testy), normálne rozdelené (histogram a Shapiro-Wilk test). 
+
+Odhad smerodajnej odchýlky možno vidieť v summary $\sigma= 0.04898$.
+
+Máme kompletný model, ideme teda robiť predikciu pre nasledujúcich 5 okamihov. Keďže reziduá sú už nezávislé, nevieme ich využiť na predikciu, ktorú budeme robiť na základe trendu.  
+
+$$X(t) = m(t) + \varepsilon(t)$$
+kde $\varepsilon(t)\sim WN(0,\sigma^2)$ -> $X^*(n+d)=m(n+d)$
+
+Na základe vety o BLUPe, BLUP má tvar:
+$$X^*(n+d) = A'\times \mathbf{\beta}$$
+
+```{r}
+CasR = (1:45)*0.05
+CasR
+predikcia = predict(trend, list(Cas=CasR, Cas2 = CasR*CasR))
+#summary(predikcia)
+predikcia
+plot(CasR, predikcia, type='o')
+s = 0.04898
+d = predikcia[41:45]-1.96*s
+h = predikcia[41:45]+1.96*s
+lines(CasR[41:45], d, col= 'red')
+lines(CasR[41:45], h, col= 'blue')
+
+plot(CasR[41:45], predikcia[41:45], type='o')
+lines(CasR[41:45], d, col= 'red')
+lines(CasR[41:45], h, col= 'blue')
+```
+

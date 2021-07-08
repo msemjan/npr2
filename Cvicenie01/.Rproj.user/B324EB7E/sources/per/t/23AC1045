@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1550580177949.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3177488887",
+    "id" : "23AC1045",
+    "lastKnownWriteTime" : 1550583312,
+    "last_content_update" : 1550583312633,
+    "path" : "~/dev/npr2/Cvicenie01/airport.Rmd",
+    "project_path" : "airport.Rmd",
+    "properties" : {
+        "cursorPosition" : "38,55",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

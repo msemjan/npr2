@@ -1,0 +1,91 @@
+---
+title: "Globálne otepľovanie"
+output: html_document
+---
+
+**Dáta v súbore globalwarm.txt sú odchýlky od priemernej teploty (za roky 1961-1990) merané za obdobie 1900-1997**
+
+#### Načítanie dát o globálnom otepľovaní
+```{r}
+globalwarm <- read.delim2("globalwarm.txt", header=FALSE)
+str(globalwarm)
+```
+
+####Načítanie premenných 
+```{r nacitanie premennej a zobrazenie}
+globaldata<-globalwarm$V1
+t<-1900:1997
+
+```
+
+####Lineárny trend
+```{r}
+fitGlobData <- lm(globaldata~t)
+coefficients(fitGlobData)
+plot(t, globaldata, type = 'o', col='blue', xlab = 'Rok', ylab = 'Teplotné odchýlky')
+abline(fitGlobData, col = 'red')
+```
+
+
+
+
+####Reziduá
+```{r}
+resGlobData <- residuals(fitGlobData)
+plot(t, resGlobData, type = 'o', col='blue', xlab = 'Rok', ylab = 'Reziduá')
+fitResData <- lm(resGlobData~t)
+coefficients(fitResData)
+abline(fitResData, col= 'red')
+```
+
+Vidíme, že naše dáta ešte stále nie sú úplne stacionárne. Zrejme ešte obsahujú nejakú sezónnu zložku. Tú potrebujeme odstrániť. Vieme, že klasický dekompozičný model (aditívny) predpokladá náhodný proces v tvare $X_t = m_t + s_t + Y_t = \mu_t + Y_t$. Potrebujeme sa zbaviť časti $\mu_t$, ktorá závisí od času.
+
+####Odstránenie sezónnej zložky diferencovaním
+Z reziduí vytvoríme nový ČR: $Y_{t2}-Y_{t1},\quad Y_{t3}-Y_{t2},\ldots,Y_{tn}-Y_{tn-1}$
+
+
+####Znázornenie diferencií reziduí
+```{r}
+plot(diff(resGlobData), type = 'o', main = 'Diferencované residuá ČR odchýlky svetovej ročnej teploty', ylab = '[°C]', xlab = 'Rok')
+abline(0,0,col='red')
+
+```
+
+
+
+####Znázornenie diferencií pôvodného ČR
+```{r}
+plot(diff(globaldata), type = 'o', main = 'Diferencované residuá ČR odchýlky svetovej ročnej teploty', ylab = '[°C]', xlab = 'Rok')
+abline(0,0,col='red')
+
+```
+
+Diferencovanie odstránilo nielen sezónnu zložku ale aj lineárny trend! Porovnaním však môžeme zistiť, že medzi poslednými dvoma grafmi je malý posun o aditívnu konštantu.
+
+
+**Úloha:**
+
+* Dokážte, že operátor diferencovania eliminuje lineárny trend ČR.
+
+Majme dáta v tvare $X_t = m_t + Y_t = a + bt + Y_t$. Diferenciu sme si definovali ako $\Delta X_t = X_t - X_{t-1} = a + bt + Y_t - (a+b(t-1)+Y_{t-1}) = b + Y_{t} - Y_{t-1} = b + \Delta Y_t$. Koeficient lineárneho trendu sme v našom prípade vypočítali a mal hodnotu $b = 0.006$. Preto bol posun tak malý. 
+
+Záver: Diferencovanie odstráni lineárny trend a sezónnu zložku, až na aditívnu konštatnu, ktorá je rovná smernici $b$.
+
+$m_t = \sum_{k=0}^{p}c_kt^k$, kde $t = 0, \pm 1, \pm 2, ...$
+
+$\Delta X_t = X_t - X_{t-1} = \sum_{k=0}^pc_kt^k + Y_t - \sum_{k=0}^{p}c_k(t-1)^k - Y_{t-1}= \sum_{k=0}^{p}c_k(t^k-(t-1)^k) + \Delta Y_t$
+
+Spravíme substitúciu:
+$ (t-1)^k = t^k - kt^{k-1} + \binom{k}{2}t^{k-2} + ... + (-1)^k$
+
+Dosadíme:
+$ \sum_{k=0}^{p}c_k(t^k - kt^{k-1} + \binom{k}{2}t^{k-2} + ... + (-1)^k) + \Delta Y_t = c_pp t^{p-1}+ \sum_{k=0}^{p-2}b_kt^k + \Delta Y_t$
+
+Keby sme spravili ďalšiu diferenciu, tak sa zbavíme ďalšieho rádu.
+$\Delta^pX_t = p^1c_p + \Delta^pY_t$ dôkaz cez (MI).
+
+**Úloha:**
+
+* Aplikujte diferenciu na ČR s polynomickým trendom  $$m_t=\sum_{k=0}^{p}c_k \cdot t^k, \quad t=0,\pm 1,\pm 2,\ldots$$ a urobte záver.
+* Aký operátor je potrebné použiť, aby sme eliminovali polynomický trend na nenulovú konštantu a aký na nulovú konštantu?
+

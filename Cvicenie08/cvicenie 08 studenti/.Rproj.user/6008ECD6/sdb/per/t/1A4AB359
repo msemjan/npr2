@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"Štrajky\"\noutput: html_document\n---\n\nSúbor STRIKES.DAT obsahuje dáta o ročnom počte štrajkov v USA v rokoch 1951-1980. \n\n####Načítanie a zobrazenie dát\n```{r fig.width=9}\nSTRIKES <- read.table(\"STRIKES.DAT\")\nstr(STRIKES)\nstrajk<-STRIKES$V1\nplot(1951:1980,strajk, type=\"o\", main = \" Ročný počet štrajkov v USA v rokoch 1951-1980 \", xlab =\"\")\n```\n\n####Pozorovanie\n\n\n\n\n**Definícia**\n\n*Rad exponenciálnych priemerov je definovaný rekurentným vzťahom*\n$$y_1=x_1$$\n$$y_t=\\alpha x_t + (1-\\alpha) y_{t-1}, t=2,3,...n,$$\n*kde $\\alpha\\in (0,1)$ je zvolená konštanta.*\n\nZrejme je $y_t=\\alpha x_t + (1-\\alpha) y_{t-1}=$\n\n$=\\alpha x_t + \\alpha(1-\\alpha) x_{t-1}+(1-\\alpha)^2y_{t-2}=$\n\n$=\\alpha x_t + \\alpha(1-\\alpha) x_{t-1}+\\alpha(1-\\alpha)^2x_{t-2}+(1-\\alpha)^3y_{t-3}=$\n\n$=\\alpha x_t + \\alpha(1-\\alpha) x_{t-1}+\\alpha(1-\\alpha)^2x_{t-2}+\\alpha(1-\\alpha)^3x_{t-3}+(1-\\alpha)^4y_{t-4}= ...$\n\n\n\n\n\nPri tejto metóde vyrovnávania je možné robiť predikciu na jedno obdobie dopredu. Predikciou hodnoty $x_{n+1}$ je exponenciálny priemer v čase $n$:\n$$\\hat{x}_{n+1}=y_n.$$\n\n####Exponenciálne vyrovnávanie v R\n\n\n####Odhad $\\alpha$ pomocou R\n\n\n####Znázornenie pôvodného ČR a vyrovnaného ČR\n\n\n####Výpočet a znázornenie reziduí\n\n\n####Možno reziduá považovať za nezávislé dáta?\n",
+    "created" : 1460443526992.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3544470421",
+    "id" : "1A4AB359",
+    "lastKnownWriteTime" : 1460443929,
+    "last_content_update" : 1460443929513,
+    "path" : "F:/Google disk/Vyucba/Nahodne procesy/NPR2 cvicenia v RStudiu/cvicenie 08 studenti/strikes.Rmd",
+    "project_path" : "strikes.Rmd",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

@@ -1,0 +1,3 @@
+$$X(t)=55,55-0,024\cdot t+Y(t)$$
+$$Y_t=1,0020Y_{t-1}-0,2834Y_{t-2}+Z_t$$
+$$Z_t\sim \mathrm{WN}(0, \sigma^2), \quad \hat{\sigma}^2=0,4436$$

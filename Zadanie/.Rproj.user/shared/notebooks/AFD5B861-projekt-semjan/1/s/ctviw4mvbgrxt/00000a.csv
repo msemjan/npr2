@@ -1,0 +1,2 @@
+"0","# PACF a ACF"
+"0","pacfMA1 = pacf(resMA1,40)"

@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551186679426.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "614CEB67",
+    "lastKnownWriteTime" : 0,
+    "last_content_update" : 1551186679426,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "F9FCE79E",
+        "caption" : "LAKE",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=LAKE&cache_key=F9FCE79E",
+        "displayedObservations" : 98,
+        "environment" : "",
+        "object" : "LAKE",
+        "preview" : 0,
+        "totalObservations" : 98,
+        "variables" : 1
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

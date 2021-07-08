@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1553002742235.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "324073173",
+    "id" : "D919297B",
+    "lastKnownWriteTime" : 1553004039,
+    "last_content_update" : 1553004039762,
+    "path" : "~/dev/npr2/Cvicenie05/pivo.Rmd",
+    "project_path" : "pivo.Rmd",
+    "properties" : {
+        "cursorPosition" : "43,0",
+        "scrollLine" : "37",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

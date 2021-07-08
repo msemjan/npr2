@@ -1,0 +1,11 @@
+"0","```r
+speech <- read.delim2(\"speech.dat\", header=FALSE)
+str(jj)
+```"
+"1","'data.frame':	84 obs. of  1 variable:
+ $ V1: Factor w/ 68 levels \" 0.44 \",\" 0.55 \",..: 7 5 12 1 4 6 13 2 8 9 ...
+"
+"0","```r
+speechData <- speech$V1
+plot(speechData, type = \"l\", main = \"Nahrávka reči\", col = \"black\")
+```"

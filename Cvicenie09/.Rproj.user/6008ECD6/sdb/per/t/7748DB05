@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"Austrálske víno\"\noutput: html_document\n---\n**Dáta v súbore WINE.dat predstavujú predaj austrálskeho červeného vína za obdobie január 1980 - október 1991 zaznamenávané mesačne**\n\n#### Načítanie dát\n```{r nacitanie dat}\nWINE <- read.table(\"WINE.DAT\")\nstr(WINE)\n```\n\nNačítanie do premennej \"vinodata\"\n```{r nacitanie premennej}\nvinodata<-WINE$V1\n```\n\n#### Zobrazenie časového radu\n```{r  fig.width=9}\nplot(vinodata, type = \"o\", main = \"Predaj austrálskeho červeného vína za obdobie 1980 - 1991\", ylab=\"mesačný predaj v tisícoch litrov\", col=\"blue\", pch=22)\n```\n\n####Pozorovanie\n\n\n**Úloha: Rastúci trend a sezónnosť vieme naraz odstrániť diferencovaním. Akým?**\n\n\n\n\n**Úloha: Nájdite model ČR pomocou spektrálnej analýzy.**\n\n\n\n\n\n\n####Nájdime model s jednou významnou frekvenciou:\n\n\n####Analýza reziduí\n\n\n\n####Vylepšený model s 2 významnými frekvenciami\n\n####Analýza reziduí, ktoré získame vylepšeným modelom:\n\n\n####Ako vyzerá kompletný model?\n\n\n\n",
+    "created" : 1461071670215.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3035256266",
+    "id" : "7748DB05",
+    "lastKnownWriteTime" : 1461071757,
+    "last_content_update" : 1461071757563,
+    "path" : "F:/Google disk/Vyucba/Nahodne procesy/NPR2 cvicenia v RStudiu/cvicenie 09 studenti/wine.Rmd",
+    "project_path" : "wine.Rmd",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

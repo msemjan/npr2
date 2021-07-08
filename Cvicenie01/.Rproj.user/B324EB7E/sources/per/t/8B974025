@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1550582792122.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "769947432",
+    "id" : "8B974025",
+    "lastKnownWriteTime" : 1550583510,
+    "last_content_update" : 1550583510007,
+    "path" : "~/dev/npr2/Cvicenie01/populaciaRysa.Rmd",
+    "project_path" : "populaciaRysa.Rmd",
+    "properties" : {
+        "cursorPosition" : "13,0",
+        "scrollLine" : "0",
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

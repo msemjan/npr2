@@ -1,0 +1,85 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+# Domáca úloha
+V tom istom projekte: 
+
+- globalwarm.txt  popis Č. R.
+- JJ.dat
+- WINE.DAT -> predaj vína.pdf
+- načítať dáta, zobraziť ich  (aj s peknými popiskami a titulkami) a popísať ich
+
+# Global warming
+## Načítanie dát
+**Tieto dáta niečo predstavujú, ale nevieme čo... Popis v čr.pdf**
+```{r}
+globalwarm <- read.delim2("globalwarm.txt", header=FALSE)
+str(globalwarm)
+
+globalwarmData <- ts(globalwarm$V1,start = 1900)
+plot(globalwarmData, type = "o", main = "Teplotné anomálie", xlab = "Rok", ylab = "Stredná hodnota teploty [°C]", col = "red")
+```
+
+## Popis dát
+
+* má rastúci trend
+* má 4 epizodické zložky
+* nemá sezónnu zložku
+* nemá cyklickú zložku
+* bez periodicity
+
+# Vývoj ziskov na burze
+## Načítanie dát
+```{r}
+jj <- read.delim2("jj.dat", header=FALSE)
+str(jj)
+
+jjData <- ts(jj$V1,start = 1960, frequency = 4)
+jjND <- jj$V1
+plot(jjData, type = "l", main = "Johnson & Johnson štvťročné zisky/akciu", xlab = "Rok", ylab = "Štvrťročný zisk", col = "blue")
+```
+## Popis dát
+
+* rastúci trend
+* niekoľko epizodických zložiek
+* aperiodický
+* pravidelné variácie
+
+
+# Nahrávka reči
+## Načítanie dát
+```{r}
+speech <- read.delim2("speech.dat", header=FALSE)
+str(jj)
+
+speechData <- speech$V1
+plot(speechData, type = "l", main = "Nahrávka reči", col = "black")
+```
+
+## Popis dát
+
+* bez trendu
+* periodické
+* bez epizodických zložiek
+* pravidelné variácie
+
+# Predaj vína
+## Načítanie dát
+```{r}
+wine <- read.delim2("WINE.DAT", header=FALSE)
+str(wine)
+
+wineData <- wine$V1
+plot(wineData, type = "o", main = "Predaj vína v tisícoch", col = "red")
+```
+
+## Popis dát
+
+* rastúci trend
+* periodické 
+* sezónna zložka 
+* obsahuje epizodické zložky
+* pravidelné variácie

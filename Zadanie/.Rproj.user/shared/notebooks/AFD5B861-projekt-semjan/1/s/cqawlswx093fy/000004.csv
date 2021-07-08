@@ -1,0 +1,3 @@
+"0","Osipane <- read.table(""Osipane.txt"", quote=""\"""", comment.char="""")"
+"0","dataOsipane = Osipane$V1"
+"0","plot(dataOsipane, main = 'Počet porazených ošípaných za obdobie január 1985 - August 1995', ylab = 'Počet porazených ošípaných', type ='o')"

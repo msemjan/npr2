@@ -1,0 +1,27 @@
+---
+title: "populaciaRysa"
+author: "Marek"
+date: "February 19, 2019"
+output: html_document
+---
+
+# Načítanie dát
+**Dáta zo súboru LYNX.DAT, ktoré predstavujú počet jedincov rysa kanadského v období 1821 - 1934.**
+```{r}
+LYNX <- read.table("LYNX.DAT", quote="\"", comment.char="")
+ str(LYNX)
+ 
+rysy_data <-LYNX$V1
+rysy_cr <- ts(rysy_data,start = 1821, end = 1934)
+rysy_cr
+
+plot(rysy_cr, type = "o", main = "Počet jedincov Rysa Kanadského (1821 - 1934)", xlab = "Čas", ylab = "Počet")
+```
+
+**Naše dáta majú tieto vlastnosti:**
+
+- nevidíme žiaden trend
+- nie sú sezónne
+- majú cyklickú zložku
+
+

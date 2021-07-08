@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1558965455312.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "446862002",
+    "id" : "79CCF30D",
+    "lastKnownWriteTime" : 1566302904,
+    "last_content_update" : 1566302904963,
+    "path" : "~/dev/npr2/Zadanie/projekt-semjan.Rmd",
+    "project_path" : "projekt-semjan.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "167,0",
+        "scrollLine" : "152",
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

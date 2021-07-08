@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551185373437.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3344029747",
+    "id" : "DB7FD9B3",
+    "lastKnownWriteTime" : 1551187800,
+    "last_content_update" : 1551187800131,
+    "path" : "~/dev/npr2/Cvicenie02/LAKE.Rmd",
+    "project_path" : "LAKE.Rmd",
+    "properties" : {
+        "cursorPosition" : "79,3",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

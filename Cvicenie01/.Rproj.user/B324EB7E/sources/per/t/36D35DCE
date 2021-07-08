@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1550583545952.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "684626842",
+    "id" : "36D35DCE",
+    "lastKnownWriteTime" : 1550584227,
+    "last_content_update" : 1550584227406,
+    "path" : "~/dev/npr2/Cvicenie01/plod.Rmd",
+    "project_path" : "plod.Rmd",
+    "properties" : {
+        "cursorPosition" : "20,0",
+        "scrollLine" : "0",
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

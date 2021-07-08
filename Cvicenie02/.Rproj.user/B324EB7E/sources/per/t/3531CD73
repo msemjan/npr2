@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551184883491.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2910914297",
+    "id" : "3531CD73",
+    "lastKnownWriteTime" : 1551185335,
+    "last_content_update" : 1551185335623,
+    "path" : "~/dev/npr2/Cvicenie02/LYNX.Rmd",
+    "project_path" : "LYNX.Rmd",
+    "properties" : {
+        "cursorPosition" : "21,101",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

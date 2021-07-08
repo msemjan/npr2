@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1554809582363.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3791260639",
+    "id" : "6EBC6B32",
+    "lastKnownWriteTime" : 1554811989,
+    "last_content_update" : 1554811989809,
+    "path" : "~/dev/npr2/Cvicenie08/cvicenie 08 studenti/strikes.Rmd",
+    "project_path" : "strikes.Rmd",
+    "properties" : {
+        "cursorPosition" : "108,76",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

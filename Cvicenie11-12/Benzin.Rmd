@@ -1,0 +1,143 @@
+---
+title: "Benzín"
+
+---
+
+**Dáta v súbore Benzin2000.txt predstavujú ceny benzínu na Slovensku týždenne počas 48 týždňov v roku 2000.**
+
+**Úloha:** Nájdite model pre daný ČR a urobte predikciu pre posledné 4 týždne roku 2000.
+
+####Načítanie a zobrazenie dát
+```{r fig.width=9}
+Benzin2000 <- read.table("Benzin2000.txt", quote="\"", comment.char="")
+str(Benzin2000)
+benzin<-Benzin2000$V1
+cas<-1:48
+plot(cas,benzin, type="o", main = "Ceny benzínu na Slovensku počas prvých 48 týždňov v roku 2000", xlab = "týždeň", ylab = "Cena za liter benzínu v korunách")
+```
+
+####Pozorovanie
+* rastúci trend
+* sezónna zložka
+* ustálená variabilita
+
+####Nájdenie rovnice lineárneho trendu a jeho odstránenie
+```{r fig.width=9}
+trend<-lm(benzin~cas)
+plot(cas,benzin, type="o", main = "Ceny benzínu na Slovensku počas prvých 48 týždňov v roku 2000", xlab = "týždeň", ylab = "Cena za liter benzínu v korunách")
+lines(cas, predict(trend), col="red", lwd=3)
+summary(trend)
+```
+
+Čiastočný model ČR:
+$$X(t)=31.9 + 0.05*t+Y(t)$$
+
+Podobjekty premennej "trend" možno tiež zistiť príkazom names():
+```{r}
+names(trend)
+```
+
+####Analýza reziduí
+```{r fig.width=9}
+reziduaBenzin<-residuals(trend)
+plot(cas, reziduaBenzin, type="o", main = "Reziduá ČR cien benzínu na Slovensku po odstránení lineárneho trendu") 
+abline(0,0)
+```
+
+Reziduá ešte určite sú závislé, bude tam nejaká sezónnosť. Môžeme sa pozrieť na ACF a PACF.
+
+```{r}
+acf(reziduaBenzin,40)
+pacf(reziduaBenzin,40)
+```
+
+Potrebujeme zistiť významnú frekvenciu - ide sa na periodogram:
+
+```{r}
+periodogram = spec.pgram(reziduaBenzin, log= 'no')
+periodogram
+```
+
+Vidíme 3 významné frekvencie - 2*$\pi$*0.02083333, 2*$\pi$*0.0625, 2*$\pi$*0.14583333. 
+1/8, 3/8, 8/6. 
+
+Možeme navrhnúť model:
+```{r}
+cos1 = cos(2*pi*cas/48)
+sin1 = sin(2*pi*cas/48)
+cos2 = cos(2*pi*cas*3/48)
+sin2 = sin(2*pi*cas*3/48)
+cos3 = cos(2*pi*cas*6/48)
+sin3 = sin(2*pi*cas*6/48)
+
+ptrend = lm(benzin ~ cas+cos1+sin1+cos2+sin2+cos3+sin3)
+plot(cas, benzin, type='o', col= 'blue')
+lines(cas, predict(ptrend), col = 'cyan')
+
+summary(ptrend)
+```
+
+Ak len jedna konštanta je významná, tak ich necháme v modeli obe - tak to káže Fourierova analýza!
+
+Teraz sa musíme presvedčiť o tom, že reziduá už sú nezávislé.
+
+```{r}
+resptrend = residuals(ptrend)
+plot(resptrend, type = 'o')
+acf(resptrend,40)
+pacf(resptrend,40)
+Box.test(resptrend)
+Box.test(resptrend, type='Ljung')
+```
+
+Dáta nie sú úplne nezávislé - acf a pacf naznačujú AR(1) alebo MA(1) - ktorý? Skúsime oba a vezmeme ten, ktorý dáva menšiu sigmu. Otázka znie, že či treba zlepšovať model? Empirické pravidlo je, že nebudeme brať Box test tak vážne a pozrieme sa na Box test s oneskorením.
+```{r}
+Box.test(resptrend, lag = 4)
+Box.test(resptrend, lag = 4, type= 'Ljung')
+```
+
+Tieto už sú nad hranicou p-value 0.05 a hypotézu nemusíme zamietnuť. Ale pre pokoj v duši ešte môžeme skúsiť tie AR(1), či MA(1)... 
+
+```{r}
+AR = ar(resptrend, order = 1, method = 'mle')
+AR
+
+acf(AR$resid[2:48],40)
+pacf(AR$resid[2:48],40)
+
+MA = arima(resptrend, order = c(0,0,1), method = 'ML')
+MA
+
+acf(MA$residuals,40)
+pacf(MA$residuals,40)
+```
+
+Teraz sú už reziduá nezávislé - vezmeme MA(1), keďže sigma^2 je trocha menšia.
+
+#### Predikcia
+```{r}
+
+MApred = predict(MA, n.ahead = 4)
+MApred
+
+cas2 = 1:52
+cos1p = cos(2*pi*cas2/48)
+sin1p = sin(2*pi*cas2/48)
+cos2p = cos(2*pi*cas2*3/48)
+sin2p = sin(2*pi*cas2*3/48)
+cos3p = cos(2*pi*cas2*6/48)
+sin3p = sin(2*pi*cas2*6/48)
+
+Ppred = predict(ptrend, list(cas=cas2))
+
+p = MApred$pred + Ppred$pred
+h = MApred$pred + Ppred$pred + MApred$se
+d = MApred$pred + Ppred$pred - MApred$se
+
+```
+
+K predikcii z MA(1) treba pripočítať aj predikciu z periodického trendu v daných časoch!
+
+
+### Tip do praxe
+https://otexts.com/fpp2/ - kniha & autor ma baliky do R

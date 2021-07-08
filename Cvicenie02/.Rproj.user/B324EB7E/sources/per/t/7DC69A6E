@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551184836585.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3109604981",
+    "id" : "7DC69A6E",
+    "lastKnownWriteTime" : 1551189901,
+    "last_content_update" : 1551189901574,
+    "path" : "~/dev/npr2/Cvicenie02/globalwarm.Rmd",
+    "project_path" : "globalwarm.Rmd",
+    "properties" : {
+        "cursorPosition" : "89,1",
+        "scrollLine" : "77"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

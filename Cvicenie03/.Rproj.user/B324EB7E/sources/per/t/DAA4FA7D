@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551794177111.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1965911818",
+    "id" : "DAA4FA7D",
+    "lastKnownWriteTime" : 1552393979,
+    "last_content_update" : 1552393979651,
+    "path" : "~/dev/npr2/Cvicenie03/priklad.Rmd",
+    "project_path" : "priklad.Rmd",
+    "properties" : {
+        "cursorPosition" : "26,76",
+        "scrollLine" : "12",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1557133910420.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "454364076",
+    "id" : "BE26C58A",
+    "lastKnownWriteTime" : 1557142558,
+    "last_content_update" : 1557142558389,
+    "path" : "~/dev/npr2/Cvicenie11-12/pad.Rmd",
+    "project_path" : "pad.Rmd",
+    "properties" : {
+        "cursorPosition" : "81,34",
+        "scrollLine" : "65"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

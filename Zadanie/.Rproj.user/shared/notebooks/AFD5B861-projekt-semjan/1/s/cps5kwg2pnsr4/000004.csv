@@ -1,0 +1,2 @@
+"0","resLm3 = residuals(lmData3)"
+"0","plot(resLm3, main = 'Reziduá po fite kubickou funkciou',type='o')"

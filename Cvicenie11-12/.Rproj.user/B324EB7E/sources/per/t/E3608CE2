@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1557135692410.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3123274344",
+    "id" : "E3608CE2",
+    "lastKnownWriteTime" : 1557138195,
+    "last_content_update" : 1557138195268,
+    "path" : "~/dev/npr2/Cvicenie11-12/gnpUSA.Rmd",
+    "project_path" : "gnpUSA.Rmd",
+    "properties" : {
+        "cursorPosition" : "146,51",
+        "scrollLine" : "133"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

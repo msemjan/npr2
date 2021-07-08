@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1558965587459.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "39FE3A15",
+    "lastKnownWriteTime" : 41846776,
+    "last_content_update" : 1558965587459,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "94D09E76",
+        "caption" : "Osipane",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=Osipane&cache_key=94D09E76",
+        "displayedObservations" : 128,
+        "environment" : "",
+        "object" : "Osipane",
+        "preview" : 0,
+        "totalObservations" : 128,
+        "variables" : 1
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

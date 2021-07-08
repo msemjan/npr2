@@ -1,0 +1,58 @@
+---
+title: "co2.Rmd"
+author: "Marek"
+date: "March 12, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Dáta
+Obsah co2.txt obsahuje dáta o obsahu CO~2~ v Zemskej atmosfére zaznamenávané v meteorologickom observatóriu na Kauna Loa (Havaj). Dáta sú merané mesačne. 
+
+## Načítanie dát
+```{r}
+CO2 <- as.matrix(read.delim2("CO2.txt", header=FALSE))
+vector <-c(t(CO2))
+
+```
+c() nám spraví z matice jeden stĺpec. Potrebovali sme transponovať maticu pomocou t(), aby sme mali dáta zoradené podľa chronologického poradia pozorovaní.
+
+## Vykreslenie dát na časovej osi
+```{r}
+dataCO2 <- ts(vector, start = 1965, frequency = 12)
+plot(dataCO2, xlab = 'Rok', ylab = 'Hodnoty CO2', type = 'o')
+```
+
+## Pozorovania o dátach
+
+- rastúci, lineárny trend
+- asi ročná perióda (d = 12)
+- variabilita ustálená
+
+## Odstránenie trendu
+Náš proces zrejme má tvar:
+
+$X_t = a + bt + S_t + Y_t$,
+
+kde $a$, $b$ sú konštanty, $S_t$ je sezónna zložka a $Y_t$ je náhodná zložka. Z príkladu, ktorý sme počítali vieme, že sa možno sezónnosti aj rastúceho trendu môžeme zbaviť aplikovaním diferencie s oneskorením 12 a následne ešte jednej diferencie.
+
+```{r}
+resCO2 <- diff(dataCO2, 12)
+plot(resCO2, xlab = 'Rok', main = 'Reziduá po diferencovaní s oneskorením 12')
+
+diffResCO2 <- diff(resCO2)
+plot(diffResCO2, xlab = 'Rok', main = 'Reziduá reziduí')
+```
+
+Sú však tieto dáta už nezávislé? Vygenerujme si náhodný biely šum a porovnajme!
+
+```{r}
+plot(diffResCO2, xlab = 'Rok', main = 'Reziduá reziduí')
+noise <- rnorm(455, 0, 1)
+plot(noise, xlab = 'Rok', main = 'Biely šum', type = 'l')
+```
+
+Celkom sa to podobá...

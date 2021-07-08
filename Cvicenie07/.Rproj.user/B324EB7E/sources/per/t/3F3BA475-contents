@@ -1,0 +1,66 @@
+---
+title: "Hurónske jazero a ACF"
+output: html_document
+---
+####Získanie reziduí po odstránení lineárneho trendu z dát popisujúcich výšku hladiny Hurónskeho jazera
+```{r fig.width=9, fig.height=5}
+LAKE <- read.table("LAKE.DAT")
+lakedata<-LAKE$V1
+roky<-1875:1972
+plot(roky,lakedata, type = "o", main = "Výška hladiny Hurónskeho jazera v období 1875-1972", ylab="výška nad 570 stôp ", col="blue", pch=22)
+trendLake<-lm(lakedata~roky)
+abline(trendLake, col="red", lwd=3)
+coefficients(trendLake)
+reziduaLake<-residuals(trendLake)
+plot(roky,reziduaLake, type="o", main = "Reziduá po lineárnom trende ČR hladiny Hurónskeho jazera")
+abline(0,0)
+
+```
+
+
+####Výberová ACF
+Reziduá z tohto ČR sme už porovnávali s WN a usúdili sme, že to zrejme ešte nie sú nezávislé dáta. Skúsme sa pozrieť na výberovú ACF týchto reziduí.
+
+```{r}
+acfLake <- acf(reziduaLake,40)
+show(acfLake)
+```
+
+**Pozorovanie:**
+
+- dáta sú ešte závislé
+- aj pre h = 1 a 2 sú hodnoty ACF pomerne vysoké
+- mohol by to byť MA(2) proces, možno aj MA(3) ale z princípu úspornosti je lepšie mať čo najmenej parametrov
+
+### Testovanie
+V R-ku existujú implementované rôzne testy na testovanie hypotéz. Je dobré skúsiť viacero testov. 2 štandardné sú Boxov-Pierceov test a Ljungovej-Boxov test. Oba testy testujú našu hypotézu:
+
+H-0-: Zložky ČR sú nezávislé.
+H-1-: Zložky ČR sú závislé.
+
+#### Boxov-Pierceov test
+```{r}
+Box.test(reziduaLake)
+```
+
+#### Ljungovej-Boxov test
+```{r}
+Box.test(reziduaLake, type = 'Ljung')
+```
+
+#### Záver z testu
+Z oboch testov sme dostali, že p-value je takmer nulová, čo znamená, že pravdepodobnosť, že nulová hypotéza je pravdivá a dáta sa zdajú závislé je prakticky nulová. 
+
+#### Testovanie šumu pre porovnanie
+```{r fig.width=9}
+n<-100
+noise<-rnorm(n,0,1)
+plot(noise, type="o")
+abline(0,0)
+
+acf <- acf(noise,40)
+
+Box.test(noise)
+Box.test(noise, type = 'Ljung')
+```
+

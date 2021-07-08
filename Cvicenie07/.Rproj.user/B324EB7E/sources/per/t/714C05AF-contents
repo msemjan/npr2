@@ -1,0 +1,87 @@
+---
+title: "Kĺzavé priemery"
+output: html_document
+---
+
+Dáta v súbore cmort.dat predstavujú priemernú dennú úmrtnosť na kardiovaskulárne ochorenia v najväčšom americkom okrese "Los Angeles county" s 10 mil. obyvateľov zaznamenávané týždenne za roky 1970-1979.
+
+####Načítanie dát 
+```{r}
+cmort <- read.table("cmort.dat")
+str(cmort)
+mortality<-cmort$V1
+```
+
+####Zobrazenie dát ako ČR
+```{r fig.width=11, fig.height=5}
+mortalityTS<-ts(mortality, start = 1970, frequency = 52)
+plot(mortalityTS, type = "o", main="Úmrtnosť na kardiovaskulárne ochorenia v okrese Los Angeles zaznamenávaná týždenne", ylab = "priemerná denná úmrtnosť")
+```
+
+Frekencia 52 lebo na rok pripadá 52 týždňov.
+
+#### Pozorovanie 
+
+- klesajúci trend
+- silná sezónna zložka - maximá v zime
+- ustálená variability
+
+#### Úloha
+Vyrovnať dáta špeciálnym lineárnym filtrom, ktorý nazývame kĺzavý priemer:
+$$\psi(B) = \sum_{j=-\infty}^{+\infty} \psi_jB^j$$
+Ten aplikujeme na $Y_t$
+Kĺzavé priemery môžu byť definované aj inak.
+$$ X_t = \sum_{j=-\infty}^{+\infty} \psi_jY_{t-j}$$
+Ak rovnaké váhy, tak kĺzavy priemer:
+$$ X_t = \frac{1}{2q+1}\sum_{j=-\infty}^{+\infty}Y_{t-j}$$, $q\in N$
+
+Aplikovanie filtra:
+```{r}
+klzavyPriemerKP3 <- filter(mortalityTS, filter = c(1/3,1/3,1/3))
+plot(mortalityTS, type = "o", main="Úmrtnosť na kardiovaskulárne ochorenia v okrese Los Angeles zaznamenávaná týždenne", ylab = "priemerná denná úmrtnosť")
+lines(klzavyPriemerKP3, col='red', lwd=3)
+```
+
+Nepomohlo, takže skúsime zvýšiť rad.
+
+```{r}
+klzavyPriemerKP5 <- filter(mortalityTS, filter = rep(1/5,5))
+plot(mortalityTS, type = "o", main="Úmrtnosť na kardiovaskulárne ochorenia v okrese Los Angeles zaznamenávaná týždenne", ylab = "priemerná denná úmrtnosť")
+lines(klzavyPriemerKP5, col='cyan', lwd=3)
+```
+
+Už to je menej roztrasené. Ale chceme odstrániť trendy. Keďže periodicita je 52, spravíme kĺzavy priemer rádu 53 (chceme nepárne číslo).
+
+```{r}
+klzavyPriemerKP53 <- filter(mortalityTS, filter = rep(1/53,53))
+plot(mortalityTS, type = "o", main="Úmrtnosť na kardiovaskulárne ochorenia v okrese Los Angeles zaznamenávaná týždenne", ylab = "priemerná denná úmrtnosť")
+lines(klzavyPriemerKP3, col='red', lwd=1)
+lines(klzavyPriemerKP5, col='cyan', lwd=1)
+lines(klzavyPriemerKP53, col='green', lwd=3)
+```
+
+Odstránili sme náhodnosť a sezónnosť. Ostal nám len trend. Kĺzavé priemery sú tiež veľmi dobré pri iných dátach ako napr. platy, hladiny nečistôt v ovzduší, atď. 
+
+#### Reziduá
+Máme model: $$X_t = m_t + S_t + \varepsilon_t$$.
+Ak chceme len náhodné reziduá: $$\varepsilon_t = X_t - (m_t + S_t)$$.
+Časť $m_t + S_t$ je uložená v našom KP5. **POZOR** KP5 má menej hodnôt, treba na to pamätať. 
+
+```{r}
+reziduaMort = mortalityTS[3:506] - klzavyPriemerKP5[3:506]
+plot(reziduaMort, type = "o", main="Reziduá - Úmrtnosť na kardiovaskulárne ochorenia v okrese Los Angeles zaznamenávaná týždenne", ylab = "res")
+```
+
+Teraz spravíme ACF a oba Box testy:
+```{r}
+acfMort <- acf(reziduaMort)
+Box.test(reziduaMort)
+Box.test(reziduaMort, type = 'Ljung')
+```
+
+Ešte stále dáte vyzerajú, že nie sú nezávislé. Z ACF sa domnievame, že sa dajú modelovať pomocou MA(1) alebo MA(2). Oba Box testy potvrdzujú, že nie sú nezávislé.
+
+
+## Domáca
+Uvažujme jednoduchý lineárny filter s váhami $\frac{1}{2q+1}$. Ukážte, že lineárny trend $m_t = c_0 + c_1t$ prejde cez filter nezmenený, t.j.
+$$\frac{1}{2q+1}\sum_{j=-q}^{q}m_{t-j}=m_t$$

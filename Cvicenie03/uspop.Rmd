@@ -1,0 +1,62 @@
+---
+title: "populaciaUSA"
+author: "Marek"
+date: "March 5, 2019"
+output: html_document
+---
+
+# Popis 
+Dáta v súbore USAPOP.txt popisujú populáciu. 
+
+# Načítanie a vykreslenie
+```{r}
+roky <- USPOP$rok
+pop <- USPOP$populacia
+plot(roky, pop, type = 'o', main='Populácia USA', xlab = 'rok', ylab = 'populácia')
+```
+
+# Pozorovanie
+
+* rastúci trend - možno kvadratický (bude stačiť diferencovanie 2. rádu?)
+* malá variabilita
+* bez sezónnej zložky
+
+# Odstránenie trendu
+*odstránime trend diferencovaním 2. rádu*
+
+```{r}
+ddpop <- diff(pop, 1, 2)  # 1 oneskorenie, 2 rad diferencovania
+mu_ddpop <- mean(ddpop)
+plot(roky[3:21], ddpop , type='o')
+abline(mu_ddpop,0, col='red')
+# roky nebudu fungovat, lebo diferencovanie zmensuje pocet dat
+```
+
+Kvadratický rád diferencovania nám odstránil trend. Po diferencovaní nám však ostala konštanta, ktorej sa vieme zbaviť diferencovaním 3. rádu. Ak nám ide o stacionaritu radu, tak postačuje 2. rád a odčítať od neho strednú hodnotu. 
+
+# Odstránenie kvadratického trendu lineárnou regresiou 
+Predtým sme fitovali príkazom $lm$ (_linear model_). Teraz znova ale budeme modelovať rovnicou $ y=a+bt+ct^2$.
+
+```{r}
+roky2 <- roky*roky
+ustrend <- lm(pop~roky+roky2)
+plot(roky, pop, main = 'Populácia USA', type='o')
+lines(roky, predict(ustrend), col='red')
+coefficients(ustrend)
+```
+
+# Reziduá
+```{r}
+res <- residuals(ustrend)
+plot(roky, res, type='o', main = 'Reziduá - Populácia USA')
+```
+
+Generujme 21 hodnôt náhodného IID procesu:
+```{r fig.width=10}
+n<-21
+noise<-rnorm(n,0,1)
+plot(noise, type = "o", main="Realizácia Gaussovského šumu")
+abline(0,0)
+```
+
+21 hodnôt nie je veľa a realizácia náhodného procesu za môže zdať byť nenáhodná. Nevieme teda s istotou tvrdiť, že reziduá populácie USA nie sú náhodné. 

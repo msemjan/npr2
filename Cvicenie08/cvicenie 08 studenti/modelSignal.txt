@@ -1,0 +1,2 @@
+$$X(t)=-2.22824 \mathrm{sin}\left(\dfrac{2\pi}{50}t\right) - 0.93715 \mathrm{cos}\left(\dfrac{2\pi }{50}t\right) + Z_t,$$
+kde $Z_t \sim WN(0,\sigma^2)$ a $\hat{\sigma}=4.991$

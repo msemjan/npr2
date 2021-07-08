@@ -1,0 +1,90 @@
+---
+title: "Hurónske jazero"
+output: html_document
+---
+
+###Všeobecný prístup pri modelovaní časových radov:
+
+1. **zostrojiť graf ČR** a skúmať hlavné vlastnosti grafu, hľadať konkrétne, či obsahuje:
+
+  + *trend* – dlhodobé správanie sa hodnôt ČR (rast, pokles, stagnácia,...)
+  + *sezónnu zložku* – pravidelné kolísanie hodnôt okolo trendu s určitou periódou (vplyv ročných období, sviatkov, kultúrne zvyky...)
+  + *epizodickú zložku* - očividná „ostrá“ zmena v správaní (nepredvídateľný odklon od dlhodobého trendu v dôsledku náhlej udalosti – zemetrasenie, vojna, štrajk...)
+  + *odľahlé merania*
+
+2. **Odstrániť tento trend a sezónnu zložku** a dostať tak reziduálnu (náhodnú) zložku, ktorá by už mala byť stacionárna (metódy sú efektívnejšie a výkonnejšie). Niekedy je potrebné urobiť predbežné transformácie (napr. logaritmickú)
+
+3. **Vybrať model** aproximácie reziduálnej zložky s využitím rôznych výberových štatistík (napr. výberová ACF).
+
+4. **Predikcia** pre reziduálnu zložku a spätnými transformáciami predpovede pre originálny ČR.
+
+****
+
+**Dáta v dátovom súbore LAKE.DAT predstavujú výšku hladiny Hurónskeho jazera nad 570 stôp v období 1875-1972**
+
+
+###Odstránenie lineárneho trendu a zobrazenie reziduí - spracovanie v Exceli 
+
+* Načítame dáta z textového súboru Lake.dat.
+* Doplníme stĺpec s aktuálnymi rokmi 1875 - 1972.
+* Zobrazíme graf v Exceli (min na y-ovej osi nastaviť na 5).
+* Popíšeme daný ČR 
+* V súlade s princípom úspornosti zvolíme lineárny trend.
+* V Exceli vypíšeme hodnoty trendu 
+* Získame ČR reziduí 
+* Zobrazíme graficky reziduá v Exceli a pridáme trendovú čiaru
+
+****
+
+###Odstránenie lineárneho trendu a zobrazenie reziduí - spracovanie v R
+
+####Načítanie dát 
+
+```{r}
+LAKE <- read.table("LAKE.DAT", quote="\"", comment.char="")
+```
+
+
+####Načítanie premenných a zobrazenie ČR 
+
+```{r}
+lakeData <- LAKE$V1
+lateTimeData <- ts(lakeData, start=1860, end=1980)
+t <- 1875:1972
+plot(t, lakeData, type='o', col='red')
+```
+
+
+####Nájdenie rovnice lineárneho trendu a jeho grafické zobrazenie
+Použijeme príkaz $lm$ ako *linear model* so syntaxou lm(čoJeZávislé~odČohoJeToZávislé).
+```{r}
+fitLakeData <- lm(lakeData~t)
+coefficients(fitLakeData)
+```
+
+
+
+####Zobrazenie trendu do grafu
+Preloženie dát priamkou z fitu.
+```{r}
+plot(t, lakeData, type='o', col='red')
+abline(fitLakeData, col='blue')
+```
+
+
+####Získanie reziduí
+Reziduá získame pomocou príkazu *residuals* a ako argument zoberieme náš fit.
+```{r}
+resLakeData <- residuals(fitLakeData)
+show(resLakeData)
+```
+
+####Znázornenie reziduí
+```{r}
+plot(t, resLakeData, type='o', col='red', xlab='Rok', ylab = 'Reziduá')
+```
+
+
+
+
+

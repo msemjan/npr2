@@ -1,0 +1,135 @@
+---
+title: "Austrálske víno"
+output: html_document
+---
+**Dáta v súbore WINE.dat predstavujú predaj austrálskeho červeného vína za obdobie január 1980 - október 1991 zaznamenávané mesačne**
+
+#### Načítanie dát
+```{r nacitanie dat}
+WINE <- read.table("WINE.DAT")
+str(WINE)
+```
+
+Načítanie do premennej "vinodata"
+```{r nacitanie premennej}
+vinodata<-WINE$V1
+```
+
+#### Zobrazenie časového radu
+```{r  fig.width=9}
+plot(vinodata, type = "o", main = "Predaj austrálskeho červeného vína za obdobie 1980 - 1991", ylab="mesačný predaj v tisícoch litrov", col="blue", pch=22)
+```
+
+####Pozorovanie
+
+- rastúci trend - zrejme lineárny
+- rastúca variabilita - log transformácia
+- výrazná sezónna zložka
+
+**Úloha: Rastúci trend a sezónnosť vieme naraz odstrániť diferencovaním. Akým?**
+
+- polynomický trend - diferencovanie znižuje rád polynómu o stupeň
+- sezónnosť - diferencovanie s oneskorením, ktoré sa rovná perióde
+- možno použiť aj kĺzavé priemery - máme síce periódu 12 ale použijeme 13, lebo chceme nepárne
+
+**Úloha: Nájdite model ČR pomocou spektrálnej analýzy.**
+
+```{r}
+lVino <- log(vinodata)
+plot(lVino, type = "o", main = "Predaj austrálskeho červeného vína za obdobie 1980 - 1991", ylab="logaritmus mesačného predaja", col="blue", pch=22)
+
+# Fitujeme priamkou
+cas = 1:length(lVino)
+lmVino <- lm(lVino~cas)
+
+# Prelozime graf priamkou
+lines(cas,predict(lmVino), col='red')
+```
+
+Chceme stacionárny rad.
+
+```{r}
+resVino <- residuals(lmVino)
+plot(resVino, main='Rezidá vína', type = 'o')
+abline(0,0,col = 'red')
+```
+
+Vieme, že máme silnú sezónnu zložku. Všetky vety v spektrálnej analýze požadujú stacionárny rad, ktorý sme si práve vyrobili.
+
+```{r}
+vinaPer <- spec.pgram(resVino, log='no')
+vinaPer$freq[12] # bez 2pi
+```
+
+Hodnota významnej frekvencie je 0.08333, čo je presne 1/12. Takže teraz vyskúšame model s frekvenciou 12.
+
+####Nájdime model s jednou významnou frekvenciou:
+
+```{r}
+c <- cos(2*pi*1/12*cas)
+s <- sin(2*pi*1/12*cas)
+
+periodaTrend <- lm(lVino~cas+c+s)
+periodaTrend
+plot(lVino, main = 'Model s jednou frekvenciou', type = 'o')
+lines(cas, predict(periodaTrend), col='red')
+```
+
+
+####Analýza reziduí
+```{r}
+resPerioda <- residuals(periodaTrend)
+acfPer <- acf(resPerioda)
+pacfPef <- pacf(resPerioda)
+
+```
+
+Nestačí nám zobrať len jednu významnú frekvenciu, stále je tam nejaká periodicita.
+
+####Vylepšený model s 2 významnými frekvenciami
+
+```{r}
+c <- cos(2*pi*1/12*cas)
+s <- sin(2*pi*1/12*cas)
+c2 <- cos(2*pi*1/4*cas)
+s2 <- sin(2*pi*1/4*cas)
+
+periodaTrend2 <- lm(lVino~cas+c+s+c2+s2)
+periodaTrend2
+plot(lVino, main = 'Model s dvoma frekvenciami', type = 'o')
+lines(cas, predict(periodaTrend2), col='red')
+```
+
+Tento model odhaduje dáta ešte lepšie :D
+
+####Analýza reziduí, ktoré získame vylepšeným modelom:
+
+```{r}
+resPerioda2 <- residuals(periodaTrend2)
+acfPer2 <- acf(resPerioda2)
+pacfPef2 <- pacf(resPerioda2)
+
+```
+
+IID test odmieta hypotézu o nezávislosti. Overme aj nezávislosť reziduí aj Boxovým testom.
+
+```{r}
+Box.test(resPerioda2)
+Box.test(resPerioda2,type='Ljung')
+```
+
+Box však hypotézu neodmieta. Ďalšie spresňovanie by znamenalo, že musíme odhadovať ďalšie dva parametre, takže sa uspokojíme s tým, čo už máme.
+
+####Ako vyzerá kompletný model?
+
+```{r}
+summary(periodaTrend2)
+hist(resPerioda2)
+shapiro.test(resPerioda2)
+```
+
+
+Celkový model bude mať tvar:
+$$\ln(X_t) = 6.77 + 0.006t - 0.112\cos(2\pi t/12) - 0.205 \sin(2\pi t/12) + 0.09 \cos(2\pi t/4) - 0.09 \sin(2\pi t/4) + Z_t$$
+kde $Z_t\sim WN(0,\sigma^2)\sim N(0, \sigma^2)$, $\hat{\sigma^2} = 0.152^2$.
+

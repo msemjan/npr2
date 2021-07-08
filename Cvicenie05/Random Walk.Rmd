@@ -1,0 +1,64 @@
+---
+title: "Náhodná prechádzka"
+output: html_document
+---
+
+####Definícia:
+Nech časový rad $X_t$ je IID šum, t.j. rad nezávislých rovnako rozdelených náhodných veličín. Procesom náhodnej prechádzky, alebo skrátene náhodnou prechádzkou $S_t, \quad t=0,1,2,\dots$ nazývame ČR definovaný vzťahom:
+$$S_0 = 0$$
+$$S_t = X_1+X_2+\ldots+X_t, \quad t=1,2,\dots$$
+
+
+####Poznámka:
+V prípade, že $X_t$ je binárny proces s $p=1/2$, hovoríme o jednoduchej symetrickej náhodnej prechádzke, pre $p\neq 1/2$ o jednoduchej nesymetrickej náhodnej prechádzke.
+
+
+####Úloha:
+Vypočítajte základné charakteristiky náhodnej prechádzky.
+
+
+####Aplikácie náhodnej prechádzky
+
+- populačná genetika - popis genetického driftu
+- difúzia - v kvapalinách, v plynoch
+- pohyb zvierat
+- veľkosť webu - odhad
+- neurológia - modelovanie šírenia vzruchov
+- počas 2. svetovej vojny - modelovanie pohybu utečenca
+- modelovanie zisku hráča hazardnej hry
+
+####Úloha:
+Uvažujme proces daný rovnicami:
+$$X_0 = 0$$
+$$X_t = X_{t-1}+Z_t, \quad t=1,2,\dots,$$
+kde $\{Z_t\}\sim \mathrm{IID} \sim \mathrm{N}(0, \sigma^2)$
+
+a) Dokážte, že daný proces je náhodnou prechádzkou.
+b) Aké má charakteristiky?
+c) Vygenerujte aspoň 5 realizácií tohto procesu.
+
+
+####Generovanie náhodnej prechádzky
+```{r}
+n = 1000
+for(i in 1:5){
+  Z = rnorm(n,0,1)
+  x = cumsum(Z)
+  par(mfrow=c(1,1))
+  plot(x, main='Nahodna prechadzka')
+  abline(0,0)  
+}
+
+```
+
+
+
+####Úloha:
+Dokážte, že autoregresné rovnice pre AR(1) nemajú stacionárne riešenie pre $|\phi|= 1.$
+
+
+####Úloha:
+Identifikujte o aký proces ide a určte, ktorý z procesov je kauzálny alebo invertibilný:
+
+a) $X_t+1.8X_{t-1}+0.81X_{t-2}=Z_{t}, \quad Z_{t}\sim \mathrm{WN}$
+b) $X_t+1.9X_{t-1}+0.88X_{t-2}=Z_{t}+0.2Z_{t-1}+0.7Z_{t-2}, \quad Z_{t}\sim \mathrm{WN}$

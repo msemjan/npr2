@@ -1,0 +1,171 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+# Dáta
+
+Dáta v súbore *Osipane.txt* predstavujú počet porazených ošípaných vo Victorii (Austrália) za obdobie január 1985 - August 1995 zaznamenávaných mesačne.
+
+# Zadanie
+
+Nájdite model pre daný časový rad a urobte predikciu pre nasledujúce 3 obdobia. Každý výsledok, resp. krok vašej analýzy stručne okomentujte a interpretujte. 
+
+# Načítanie a vykreslenie dát
+
+```{r}
+Osipane <- read.table("Osipane.txt", quote="\"", comment.char="")
+dataOsipane = Osipane$V1
+plot(dataOsipane, main = 'Počet porazených ošípaných za obdobie január 1985 - August 1995', ylab = 'Počet porazených ošípaných', type ='o')
+```
+# Popis dát
+
+- vidíme trend - kvadratický?
+- variabilita sa zdá byť ustálená
+- zrejme bez sezónnej a periodickej zložky
+- rad nebude stacionárny
+
+# Fitovanie kvadratickou funkciou
+
+```{r}
+t = 1:length(dataOsipane)
+t2 = t*t
+lmData2 = lm(dataOsipane~t+t2)
+plot(dataOsipane, main = 'Počet porazených ošípaných za obdobie január 1985 - August 1995', ylab = 'Počet porazených ošípaných', type ='o')
+lines(t, predict(lmData2), col='red')
+show(lmData2)
+
+```
+
+# Reziduá
+
+```{r}
+resLm2 = residuals(lmData2)
+plot(resLm2, main = 'Reziduá po fite kubickou funkciou',type='o')
+```
+
+Fit kvadratickou funkciou v istých oblastiach nekopíruje správanie dáta veľmi dobre a reziduá nedávajú stacionárny rad. Skúsime kubickú funkciou.
+
+# Fitovanie kubickou funkciou
+
+```{r}
+t = 1:length(dataOsipane)
+t2 = t*t
+t3 = t2*t
+lmData3 = lm(dataOsipane~t+t2+t3)
+plot(dataOsipane, main = 'Počet porazených ošípaných za obdobie január 1985 - August 1995', ylab = 'Počet porazených ošípaných', type ='o')
+lines(t, predict(lmData3), col='red')
+summary(lmData3)
+```
+
+Kubická funkcia dáva lepší fit.
+
+# Reziduá
+
+Chceme vedieť, či po fite už máme stacionárny rad nezávislých hodnôt. Vykreslíme si reziduá a spravíme testy nezávislosti dát. 
+```{r}
+resLm3 = residuals(lmData3)
+plot(resLm3, main = 'Reziduá po fite kubickou funkciou',type='o')
+```
+
+Rad už vyzerá stacionárny ale zrejme tam ešte bude nejaká závislosť medzi hodnotami. 
+
+## Nezávislosť reziduí dát po fite kubickou funkciou
+
+```{r}
+acfLm3 = acf(resLm3,40)
+pacfLm3 = pacf(resLm3,40)
+Box.test(resLm3)
+Box.test(resLm3, type='Ljung')
+```
+
+ACF, PACF aj Box testy vyvracajú hypotézu o nezávislosti dát. V dátach ešte je nejaká závislosť, ktorú vieme využiť pri predikcii budúcich hodnôt. Z PACF však nedostávame užitočnú informáciu o vhodnom modeli. Na základe ACF by to mohol byť MA(1), možno MA(2). Zvolíme model s menším počtom parametrov. Momentálne náš model má tvar:
+
+$$X_t = c_0 + c_1t + c_2t^2 + c_3t^3 + Y(t),$$
+
+kde $Y(t)$ budme modelovať pomocou MA(1) procesu.
+
+# MA(1) model
+Neznámu zložku $Y(t)$ budeme hľadať v tvare:
+$$ Y(t) = Z_t + \theta Z_{t-1}$$
+
+```{r}
+modelMA1 = arima(resLm3, order=c(0,0,1))
+resMA1 = residuals(modelMA1)
+plot(resMA1, main='Rezidá MA(1) modelu.', type ='o')
+```
+
+## Test nezávislosti reziduí pre MA(1) model
+
+```{r}
+# PACF a ACF
+pacfMA1 = pacf(resMA1,40)
+acfMA1 = acf(resMA1, 40)
+
+# Box testy
+Box.test(resMA1)
+Box.test(resMA1, type = 'Ljung')
+
+# Test normality pre reziduá
+shapiro.test(resMA1)
+```
+
+Empirické pravidlo pre PACF aj ACF vyvracajú hypotézu o nezávislosti dát ale oba Box testy naznačujú, že dáta sú nezávislé. Je možné, že v dátach je ešte nejaká závislosť, ktorú by sme vedeli využiť na predpoveď budúcich hodnôt. Žiaľ, z PACF ani ACF už nedostávame žiadne nápovedy na vhodný model. Je možné, že analýza vo frekvenčnej oblasti nám prezradí viac.
+
+```{r}
+coefficients(modelMA1)
+```
+
+
+# Analýza vo frekvenčnej oblasti - Periódogram
+
+```{r}
+pgramData <- spec.pgram(resMA1, log='no')
+```
+
+V grafe priebehu periódogramu vidíme štyri významné frekvencie. Ich pridanie do modelu by znamenal, že by sme mali v modeli ďalších osem voľných parametrov, čím sa model zbytočne komplikoval. 
+
+# Výsledný model
+
+$$X_t = c_0 + c_1t + c_2t^2 + c_3t^3 + Z_t + \theta Z_{t-1},$$
+
+kde $Z_t\sim WN(0,\sigma^2)$, $c_0 = 1.057\times10^5$, $c_1 = -1.879\times 10^3$, $c_2 = 3.296\times 10^1$, $c_3 =  -1.486 \times 10^{-1}$ a $\theta = 0.2396041$.
+
+# Predpoveď na ďalšie tri obdobia
+```{r}
+plot(t, dataOsipane, main = 'Počet porazených ošípaných za obdobie január 1985 - August 1995', ylab = 'Počet porazených ošípaných', type ='o')
+
+#t_predict = length(t):(length(t+3))
+#t_predict = 1:(length(t))
+
+n = 3
+
+s = t[length(t)] + 1
+tx = s:(length(t)+n)
+predictLm3 = ts(predict.lm(lmData3, newdata = data.frame(t = tx, t2 = tx*tx, t3 = tx*tx*tx)))
+
+predictMA1 = predict(modelMA1, n.ahead = n)
+predictMA1
+
+
+
+PR = predictMA1$pred
+ER = predictMA1$se
+
+H = PR + 1.96 * ER
+D = PR - 1.96 * ER
+
+h = predictLm3 + ts(H)
+d = predictLm3 + ts(D)
+pr = predictLm3 + ts(PR) 
+
+lines(tx, pr, col = 'blue', type = 'o')
+lines(tx, h, col = 'red')
+lines(tx, d, col = 'red')
+
+```
+

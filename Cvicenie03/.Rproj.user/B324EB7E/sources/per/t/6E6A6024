@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551792065987.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3124101543",
+    "id" : "6E6A6024",
+    "lastKnownWriteTime" : 1551794166,
+    "last_content_update" : 1551794166041,
+    "path" : "~/dev/npr2/Cvicenie03/uspop.Rmd",
+    "project_path" : "uspop.Rmd",
+    "properties" : {
+        "cursorPosition" : "62,0",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

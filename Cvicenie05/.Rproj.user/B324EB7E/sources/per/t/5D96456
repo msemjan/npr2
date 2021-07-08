@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1553002859927.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "5D96456",
+    "lastKnownWriteTime" : 0,
+    "last_content_update" : 1553002859927,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "C0C1203",
+        "caption" : "pivo",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=pivo&cache_key=C0C1203",
+        "displayedObservations" : 396,
+        "environment" : "",
+        "object" : "pivo",
+        "preview" : 0,
+        "totalObservations" : 396,
+        "variables" : 1
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

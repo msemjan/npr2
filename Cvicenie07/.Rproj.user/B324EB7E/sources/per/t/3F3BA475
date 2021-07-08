@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1554205959222.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3218567478",
+    "id" : "3F3BA475",
+    "lastKnownWriteTime" : 1554206967,
+    "last_content_update" : 1554206967529,
+    "path" : "~/dev/npr2/Cvicenie07/HuronACF.Rmd",
+    "project_path" : "HuronACF.Rmd",
+    "properties" : {
+        "cursorPosition" : "62,0",
+        "scrollLine" : "48"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

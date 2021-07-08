@@ -1,0 +1,64 @@
+---
+title: "Generovanie AR(1)"
+output: html_document
+---
+
+Na generovanie ARMA a ARIMA procesov slúži príkaz arima.sim()
+
+Vygenerujte proces $X_t-0,8X_{t-1}=Z_t$
+
+```{r}
+n = 100
+ar1 = arima.sim(list(ar=0.8),n)
+plot(ar1, main = 'Vygenerovany AR(1) proces', type='o')
+abline(0,0)
+```
+
+
+
+Vygenerujte niekoľko realizácií. 
+
+**Pozorovanie: **
+
+- bez trendu
+- str. hodnota okolo 0
+- zrejme stacionárny
+- nie je to biely šum!
+- porovnaním s hladinou Hurónskeho jazera vidíme, že sa podobajú
+
+
+Vygenerujte proces $X_t+0,8X_{t-1}=Z_t$
+
+
+```{r}
+n = 100
+ar1 = arima.sim(list(ar=-0.8),n)
+plot(ar1, main = 'Vygenerovany AR(1) proces', type='o')
+abline(0,0)
+```
+
+- Zhluky sú pravidelnejšie
+- častejšie sa striedajú hodnoty s +/-
+
+Zobraziť oba grafy do jedného obrázku kvôli lepšiemu porovnaniu:
+
+```{r}
+n = 100
+ar1a = arima.sim(list(ar=0.8),n)
+ar1b = arima.sim(list(ar=-0.8),n)
+par(mfrow=c(2,1))
+plot(ar1a, main = 'Vygenerovany AR(1) proces', type='o')
+abline(0,0)
+plot(ar1b, main = 'Vygenerovany AR(1) proces', type='o')
+abline(0,0)
+```
+
+
+
+Syntax pre ľubovoľný ARMA(p,q):
+
+arima.sim(list(ar=c($\phi_1, \phi_2, \dots,\phi_p$), ma=c($\theta_1, \theta_2, \dots, \theta_q$)),n)
+
+Syntax pre ľubovoľný ARIMA(p,d,q):
+
+arima.sim(list(order=(p,q,d),ar=c($\phi_1, \phi_2, \dots,\phi_p$), ma=c($\theta_1, \theta_2, \dots, \theta_q$)),n)

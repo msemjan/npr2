@@ -1,0 +1,54 @@
+---
+title: "pivo.Rmd"
+author: "Marek"
+date: "March 19, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Produkcia piva
+## Dáta
+Predstavujú produkciu piva v Austrálii v miliónoch litrov za obdobie 1958 až 1990. 
+
+## Zobrazenie dát
+```{r}
+pivo <- read.csv2("pivo.dat", sep="")
+p <- pivo$beer
+plot(p, main = 'Produkcia Austrálskeho piva v rokoch 1958 - 1990',ylab = 'Pivo', type = 'l')
+```
+
+Variabilita dát rastie. Pomôže nám logaritmická transformácia.
+
+```{r}
+logP <- log(p)
+plot(logP, main = 'Produkcia Austrálskeho piva v rokoch 1958 - 1990',ylab='log(Pivo)',type = 'l')
+```
+
+Teraz skúsime odstrániť trend a sezónnosť. Trend by mohol mať kvadratické správanie. Keďže predpokladáme, že všetci pijú pivo v lete, tak bude perióda $d=12$.
+
+Náš model teda bude mať tvar:
+$\ln{X_t} = a_s + a_1t + a_2t^2 +S_t + Y_t$
+
+
+```{r}
+t <- 1:length(p)
+t2 <- t*t
+trend = lm(logP~t+t2)
+plot(logP, main = 'Produkcia Austrálskeho piva v rokoch 1958 - 1990',ylab='log(Pivo)',type = 'l')
+lines(t, predict(trend), col = 'red')
+coefficients(trend)
+```
+
+## Reziduá
+
+```{r}
+plot(logP, main = 'Produkcia Austrálskeho piva v rokoch 1958 - 1990',ylab='log(Pivo)',type = 'l')
+resP <- residuals(trend)
+plot(resP, main = 'Reziduá produkcie Austrálskeho piva v rokoch 1958 - 1990', type = 'o')
+abline(0,0,col='red')
+```
+
+Trend sme zrejme odstránili ale ostala nám sezónnosť... Odstránime ju po reklame.

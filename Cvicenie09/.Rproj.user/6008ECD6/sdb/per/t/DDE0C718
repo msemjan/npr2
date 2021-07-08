@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"Hurónske jazero - kompletný model\"\noutput: html_document\n---\n\n####Úloha: Nájdite model pre ČR výšky hladiny Hurónskeho jazera.\n\n####Znázornenie dát popisujúcich výšku hladiny Hurónskeho jazera, model pre trend a nájdenie reziduí\n```{r fig.width=9, fig.height=5}\nLAKE <- read.table(\"LAKE.DAT\")\nlakedata<-LAKE$V1\nroky<-1875:1972\nplot(roky,lakedata, type = \"o\", main = \"Výška hladiny Hurónskeho jazera v období 1875-1972\", ylab=\"výška nad 570 stôp \", col=\"blue\", pch=22)\ntrendLake<-lm(lakedata~roky)\nabline(trendLake, col=\"red\", lwd=3)\nreziduaLake<-residuals(trendLake)\nplot(roky,reziduaLake, type=\"o\", main = \"Reziduá po lineárnom trende ČR hladiny Hurónskeho jazera\")\nabline(0,0)\n\n```\n\n####Úloha: zapíšte čiastočný model ČR\n\n\n\n####Model pre reziduá\n\n\n\n\n\n\n**Výsledný model:**\n\n",
+    "created" : 1461071555078.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2434683459",
+    "id" : "DDE0C718",
+    "lastKnownWriteTime" : 1461071635,
+    "last_content_update" : 1461071635199,
+    "path" : "F:/Google disk/Vyucba/Nahodne procesy/NPR2 cvicenia v RStudiu/cvicenie 09 studenti/HuronModel.Rmd",
+    "project_path" : "HuronModel.Rmd",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

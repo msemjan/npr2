@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1554812017053.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2643548313",
+    "id" : "3D7B302",
+    "lastKnownWriteTime" : 1554815116,
+    "last_content_update" : 1554815116979,
+    "path" : "~/dev/npr2/Cvicenie08/cvicenie 08 studenti/Signal.Rmd",
+    "project_path" : "Signal.Rmd",
+    "properties" : {
+        "cursorPosition" : "116,0",
+        "scrollLine" : "108"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

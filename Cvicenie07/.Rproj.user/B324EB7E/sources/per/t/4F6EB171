@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1554204610872.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2457196684",
+    "id" : "4F6EB171",
+    "lastKnownWriteTime" : 1554205976,
+    "last_content_update" : 1554205976486,
+    "path" : "~/dev/npr2/Cvicenie07/WNaACF.Rmd",
+    "project_path" : "WNaACF.Rmd",
+    "properties" : {
+        "cursorPosition" : "25,0",
+        "scrollLine" : "20"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

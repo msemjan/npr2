@@ -1,0 +1,147 @@
+---
+title: "Generovanie procesov"
+output: html_document
+---
+Vo všeobecnom prístupe pri modelovaní ČR sú 2 dôležité etapy:
+
+1. práca s trendom, sezónnosťou (ich odstránenie)
+2. práca so stacionárnym zvyškom - reziduami (nájdenie modelu pre reziduá)
+
+Odstraňovanie trendu:
+
+* lineárna regresia
+* diferencovaním
+* vyrovnávanie
+    + kĺzavými priemermi, 
+    + odstránením vyších frekvencií (Fourierova analýza)
+    + exponenciálne vyrovnávanie
+   
+Odstraňovanie trendu a sezónnosti:
+
+* harmonická regresia (Fourierova analýza - periodickosť sa modeluje funkciami sin, cos)
+* diferencovaním s oneskorením d, kde d je perióda sezónnej zložky
+* vyrovnávanie kĺzavými priemermi
+
+Budeme striedať úlohy na obe etapy.
+
+###Generovanie procesov
+###Binárny proces
+####Definícia
+**Binárnym procesom** nazývame ČR $\{X_t, t=1,2,3...\}$, ktorého zložky sú nezávislé náhodné premenné s rozdelením pravdepodobnosti $P(X_t=1)=p; \quad P(X_t=-1)=1-p$
+
+####Generovanie v R
+```{r }
+n<-200
+p<-0.5
+
+for(i in 1:1){
+  bproces1<-2*rbinom(n,1,p)-1
+  #bproces1<-rbinom(n,1,p) # vytvorenie binarneho procesu
+  bproces1
+
+  # Generovanie nahodnej prechadzky
+  #randomWalk <- cumsum(bproces1)
+  #plot(randomWalk)
+  plot(bproces1, type='o')  
+}
+
+```
+
+
+
+####Znázornenie 
+
+
+####Intuitívne pozorovanie
+Binárny proces
+
+* bez trendu 
+* nulová stredná hodnota
+* konštantná variabilita
+* vieme konštatovať -> je to stacionárny rad
+
+
+####Reálne príklady
+
+* párne/nepárne hody kockou
+* hodenie 6-tky na kocke pre p=1/6
+* narodenie chlapcov/dievčat
+* realizácie úspešnosti trestných hodov hráčov NBA p=.77
+
+Nestáva sa, že by po sebe nasledovalo veľa rovnakých hodnôt. Na základe predchádzajúcich hodnôt nevieme odhadnúť ďalšie, pretože zložky ČR sú nezávislé. 
+
+**Úloha**
+
+Dokážte, že binárny proces je stacionárny.
+
+Stacionarita radu:
+
+* stredná hodnota $\mu_t$ je konštantná
+* kovariancia $\gamma(t+h,t) = \gamma(h)$ nezávisí od času
+
+Konštantnosť strednej hodnoty:
+$\mu(X) = E(X_t) = \sum_{k=\pm 1}p_kx_k = p\cdot 1 +(1-p)(-1) = 2p-1$
+Tá nezávisí od času, takže podmienka je splnená.
+
+$\gamma(t+h,t) = Cov(X_{t+h}, X_t) = E(X_{t+h}X_t) -E(X_{t+h})E(X_t) = 0$ lebo máme nezávislosť a platí $E(X_{t+h}X_t) = E(X_{t+h})E(X_t)$.
+
+Výpočet druhého momentu:
+$E(X_t^2) = \sum_{k=\pm 1}x_k^2p_k$
+
+$h = 0$:
+$\gamma(t,t)=D(X_t)=E(X_{t}^2) - E(X_{t})^2 = p+(1-p)-(2p-1)^2=1-4p^2+4p-1=4p(1-p)$
+
+Záver:
+$\gamma = 4p(1-p)\delta_{k,0}$
+
+###IID proces
+####Definícia
+**IID procesom** nazývame ČR $\{X_t, t=1,2,3...\}$, ktorého zložky sú nezávislé a rovnako rozdelené. 
+
+
+IID je špeciálny prípad bieleho šumu. Binárny proces je špeciálny prípad IID procesu. Ak je IID zo spojitého rozdelenia, takho nazývame aj *šum*.
+
+####Generovanie IID~N(0,1) v R
+```{r fig.width=9}
+n<-200
+for(i in 1:10){
+  noise<-rnorm(n,0,1)
+  plot(noise, type = "o", main="Realizácia Gaussovského šumu")
+  abline(0,0)
+}
+```
+
+Vygenerovať niekoľko takýchto realizácii a sledovať, či sú prítomné dlhšie sekvencie hodnôt s rovnakým znamienkom. 
+
+####Intuitívne pozorovanie
+
+* bez trendu
+* stredná hodnota je nulová
+* konštantná disperzia
+* ide o stacionárny ČR
+
+
+## Zadanie
+Chceme 98 náhodných hodnôt náhodného bieleho šumu a porovnať ich s reziduami z príkladu s Hurónskym jazerom.
+
+```{r fig.width=10}
+n<-98
+noise<-rnorm(n,0,1)
+plot(noise, type = "o", main="Realizácia Gaussovského šumu")
+abline(0,0)
+
+```
+
+Vloženie obrázku z rovnakého priečinku:
+![](ReziduaHuron.png)
+
+#### Komentár
+Môžeme prehlásiť reziduá ČR Hurónskeho jazera za biely šum? Na základe grafu povieme, že nie. V prípade Hurónskeho jazera pozorujeme typickú situáciu pre hodnoty reziuí ČR:
+
+* absencia badateľného trendu
+* ustálenosť/stacionarita
+* plynulosť/hladkosť grafun netypická pre IID/white noise
+* pozorujeme príliš dlhé sekvencie residuí s rovnakým znamienkom, čo naznačuje skorelovanosť dát
+* kým po pozorovanej hodnote IID môže nasledovať aj záporná aj kladná aj takmer nulová hodnota s rovnakou pravdepodobnosťou, pre reálne dáta bude pravdepodobná blízka hodnota
+
+*Výhoda korelácie dát:* vieme lepšie predikovať budúce hodnoty ČR. Žiaľ, známe metódy môžeme defenestrovať, keďže predpokladajú nekorelované dáta... Budeme musieť rozšíriť náš aparát o nové postupy.

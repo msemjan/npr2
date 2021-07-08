@@ -1,0 +1,109 @@
+---
+title: "Štrajky"
+output: html_document
+---
+
+Súbor STRIKES.DAT obsahuje dáta o ročnom počte štrajkov v USA v rokoch 1951-1980. 
+
+####Načítanie a zobrazenie dát
+```{r fig.width=9}
+STRIKES <- read.table("STRIKES.DAT")
+str(STRIKES)
+strajk<-STRIKES$V1
+plot(1951:1980,strajk, type="o", main = " Ročný počet štrajkov v USA v rokoch 1951-1980 ", xlab ="")
+```
+
+####Pozorovanie
+
+- bez sezónnej zložky a bez trendu
+- nárast okolo roku 1970 spôsobený krízou
+
+Ak rad nemá ani sezónnu zložku, ani trend tak možno použiť jednoduché exponenciálne vyrovnávanie. Metóda je odvodená od metódy kĺzavých priemerov ale má výhodu v tom, že nestrácame dáta.
+
+**Definícia**
+
+*Rad exponenciálnych priemerov je definovaný rekurentným vzťahom*
+$$y_1=x_1$$
+$$y_t=\alpha x_t + (1-\alpha) y_{t-1}, t=2,3,...n,$$
+*kde $\alpha\in (0,1)$ je zvolená konštanta.*
+
+Zrejme je $y_t=\alpha x_t + (1-\alpha) y_{t-1}=$
+
+$=\alpha x_t + \alpha(1-\alpha) x_{t-1}+(1-\alpha)^2y_{t-2}=$
+
+$=\alpha x_t + \alpha(1-\alpha) x_{t-1}+\alpha(1-\alpha)^2x_{t-2}+(1-\alpha)^3y_{t-3}=$
+
+$=\alpha x_t + \alpha(1-\alpha) x_{t-1}+\alpha(1-\alpha)^2x_{t-2}+\alpha(1-\alpha)^3x_{t-3}+(1-\alpha)^4y_{t-4}= ...$
+
+
+
+
+Z pohľadu na rekurentný vzťah vidíme, že $1-\alpha$ hrá úlohu váhy. Ak $\alpha = 1$, tak dostaneme pôvodný rad. Pre $\alpha \approx 1$, tak máme podobný rad ako bol pôvodný. Vyrovnávame málo a prejavujú sa vo veľkom náhodné javy. Keď $\alpha \approx 0$, tak sa rad "veľmi vyrovnáva" a staršie dáta hrajú oveľa väčšiu úlohu a môžu nám ujsť trendy. Ani jeden z extrémov nie je dobrý. Optimálnu hodnotu $\alpha$ nájdeme tak, že "najlepšie vyhladí" naše dáta.
+
+Pri tejto metóde vyrovnávania je možné robiť predikciu na jedno obdobie dopredu. Predikciou hodnoty $x_{n+1}$ je exponenciálny priemer v čase $n$:
+$$\hat{x}_{n+1}=y_n.$$
+
+####Exponenciálne vyrovnávanie v R
+V R je metóda naprogramovaná ako špeciálny prípad tzv. Holterovej-Wintersovej metódy (filtra). Metóda má tri parametre, pre $\beta = 0$ a $\gamma = 0$ dostaneme, čo chceme.
+
+```{r}
+strajkHW <- HoltWinters(strajk, alpha = 0.4, beta = FALSE, gamma = FALSE)
+strajkHW
+shw = strajkHW$fitted[,1]
+shw
+a = strajkHW$coefficients
+a
+```
+
+
+
+####Odhad $\alpha$ pomocou R
+Parameter $\alpha$ nemusíme zadávať, softwér sa ho pokúsi optimalizovať.
+
+```{r}
+strajkHW <- HoltWinters(strajk, beta = FALSE, gamma = FALSE)
+strajkHW
+strajkHW$alpha
+shw = strajkHW$fitted[,1]
+shw
+a = strajkHW$coefficients
+a
+```
+
+
+####Znázornenie pôvodného ČR a vyrovnaného ČR
+```{r fig.width=9}
+plot(1951:1980,strajk, type="o", main = " Ročný počet štrajkov v USA v rokoch 1951-1980 ", xlab ="", col='green')
+lines(shw, col = 'cyan')
+```
+
+Vyrovnávanie
+```{r}
+shwdata <- ts(c(shw,a), start = 1951)
+strajkData = ts(strajk, start = 1951)
+plot(strajkData, type="o", main = " Ročný počet štrajkov v USA v rokoch 1951-1980 ", xlab ="", col='green')
+lines(shwdata, col = 'magenta')
+
+```
+
+**Posledná vyrovnaná hodnota je považovaná za predikciu.**
+
+####Výpočet a znázornenie reziduí
+```{r}
+shwres <- strajkData-shwdata
+plot(shwres, type="o", main = "Reziduá: Ročný počet štrajkov v USA v rokoch 1951-1980 ", xlab ="", col='blue')
+abline(0,0, col = 'red')
+```
+
+
+
+####Možno reziduá považovať za nezávislé dáta?
+```{r}
+acf(shwres, 40)
+Box.test(strajkData)
+Box.test(strajkData, type = 'Ljung')
+```
+
+**IID test:** Všetky hodnoty sú v intervale, čiže je to OK. Ale treba si dávať pozor, máme menej ako 40 dát. 
+
+**Box testy:** Nezamietame hypotézu o nezávislosti, takže dáta sú nezávislé.

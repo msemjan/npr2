@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1554207747840.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "915290247",
+    "id" : "714C05AF",
+    "lastKnownWriteTime" : 1554210185,
+    "last_content_update" : 1554210185127,
+    "path" : "~/dev/npr2/Cvicenie07/Cmort.Rmd",
+    "project_path" : "Cmort.Rmd",
+    "properties" : {
+        "cursorPosition" : "85,141",
+        "scrollLine" : "71"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

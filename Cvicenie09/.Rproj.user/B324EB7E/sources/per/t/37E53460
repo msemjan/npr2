@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1555416382618.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2497187131",
+    "id" : "37E53460",
+    "lastKnownWriteTime" : 1557140747,
+    "last_content_update" : 1557140747892,
+    "path" : "~/dev/npr2/Cvicenie09/wine.Rmd",
+    "project_path" : "wine.Rmd",
+    "properties" : {
+        "cursorPosition" : "135,0",
+        "scrollLine" : "118"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

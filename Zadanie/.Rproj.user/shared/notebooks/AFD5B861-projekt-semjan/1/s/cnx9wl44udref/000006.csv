@@ -1,0 +1,4 @@
+"0","t = 1:length(data)"
+"0","t2 = t*t"
+"0","lmData2 = lm(dataOsipane~t+t2)"
+"0","plot(dataOsipane, main = 'Počet porazených ošípaných za obdobie január 1985 - August 1995', ylab = 'Počet porazených ošípaných', type ='o')"

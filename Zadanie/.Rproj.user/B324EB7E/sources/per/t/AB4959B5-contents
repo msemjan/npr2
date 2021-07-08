@@ -1,0 +1,150 @@
+---
+title: "HDP USA"
+output: html_document
+---
+
+**Dáta v súbore gnpUSA.txt predstavujú časový rad zachytávajúci rast HDP v Spojených štátoch amerických
+štvrťročne v období druhý kvartál 1947 do prvého kvartálu 1991. (gross national product)**
+
+**Úloha:** Urobte predikciu rastu HDP na zvyšné tri kvartály roku 1991 a zhodnoťte. 
+
+####1. Zobrazíme časový rad a slovne popíšeme
+
+**Načítanie dát**
+```{r}
+gnpUSA <- read.table("gnpUSA.txt", quote="\"", comment.char="")
+str(gnpUSA)
+GNP<-gnpUSA$V1
+```
+
+**Zobrazenie dát**
+```{r fig.width=9}
+gnp<-ts(GNP, start=c(1947,2),frequency=4)
+plot(gnp,type="o",col="blue", main = "Rast HDP v Spojených štátoch amerických
+štvrťročne v období druhý kvartál 1947 do prvého kvartálu 1991.")
+abline(0,0)
+```
+
+**Pozorovanie**
+
+* konštantný nenulový trend
+* ustálená variabilita
+
+####2. Nájdeme tento trend a odstránime ho, aby sme dostali reziduá.
+
+Ako? Diferencovaním, regresiou. Vyberieme si regresiu. 
+
+Ľahko sa dá ukázať, že metódou najmenších štvorcov dostaneme trend rovný priemeru. 
+
+```{r fig.width=9}
+c<-mean(gnp)
+c
+rezidua<-gnp-mean(gnp)
+plot(rezidua, type="o",col="red")
+abline(0,0)
+```
+
+Záver: $$X(t)=0,0077+Y(t)$$
+
+V prípade konštantného trendu však netreba odstraňovať tento trend v R, pretože príkazy vedia pracovať s touto konštantou. Možno pracovať priamo s pôvodným radom, ktorý je už stacionárny.
+
+####3. Hľadanie modelu pre $X(t)$
+Využijeme identifikáciu modelu pomocou ACF a PACF
+
+```{r}
+acf(rezidua, 40)
+pacf(rezidua, 40)
+
+```
+
+Podľa ACF MA(2) a podľa PACF AR(1) - volíme ten s menším počtom parametrov(princíp úspornosti). Model teda hľadáme v tvare:
+$$X(t) - \mu = \phi X(t-1) + Z(t),$$
+kde $Z(t) \sim WN(0,\sigma^2)$.
+
+```{r}
+# ar.ols(gnp, order.max = 1) # minule sme pouzili toto - metoda najmensich stvorcov
+m1 = ar.mle(gnp, order = 1) # metoda maximalnej vierohodnosti
+m1
+```
+
+Je toto dostatočné? Mali by sme sa pozrieť na reziduá. Je užitočné používať príkaz names - vypíše všetky premenné uložené v objekte. 
+
+```{r}
+names(m1)
+plot(m1$resid, main='Reziduá modelu',type='o')
+abline(0,0)
+```
+
+Alternatívne možno na modelovanie použiť aj príkaz ARIMA:
+```{r}
+m2 = arima(gnp, order=c(1,0,0), method = 'ML')
+names(m2)
+plot(m2$residuals, main='Reziduá modelu',type='o')
+abline(0,0)
+```
+
+Dostávame rovnaký model. Overme správnosť.
+
+```{r}
+resM1 = m1$resid[2:length(m1$resid)]
+acf(resM1,40)
+pacf(resM1,40)
+Box.test(resM1)
+Box.test(resM1, type='Ljung')
+```
+
+Podľa ACF a PACF sú nezávislé a Box testy tiež nezamietajú hypotézu o nezávislosti, takže sme zvolili dobrý model $X(t) = 0.0077+0.38X(t-1)+Z(t)$. $Z(t)$ možno považovať za biely šum s parametrami
+
+####4. Odhadneme koeficienty modelu 
+Ako? Metódy OLS, MLE, Yule-Walker pre AR proces.
+V R to vie urobiť príkaz ar, resp. arima, keďže ar je špeciálny prípad arima.
+Vyskúšame metódu mle.
+
+
+
+####5. Overenie správnosti modelu
+
+
+####6. Predikcia budúcich hodnôt (pre 3 nasledujúce kvartály)
+
+Napr. pomocou BLUP. 
+
+```{r}
+m1pred = predict(m1, n.ahead=3)
+m1pred
+```
+
+
+####7. Grafické znázornenie predikcie
+
+```{r}
+PR = m1pred$pred
+CH = m1pred$se
+
+H = PR + 1.96*CH
+D = PR - 1.96*CH
+
+h = ts(H, start=c(1991,2), frequency = 4)
+d = ts(D, start=c(1991,2), frequency = 4)
+pr = ts(PR, start=c(1991,2), frequency = 4)
+plot(gnp)
+lines(pr, col = 'blue')
+lines(h, col = 'red')
+lines(d, col = 'red')
+```
+
+
+LEPŠÍ MODEL - IDENTIFIKÁCIA pomocou Akaikeho informačného kritéria (nie pomocou ACF), čo je štatistika istého tvaru, pričom R-excel prejde cez všetky možné AR modely.
+Riadi sa pri tom jedným z bodov Okhamovej britvy, t.j. vyberie model s najmenším rozptylom  bieleho šumu.
+
+####3. - 4. Odhalenie modelu a jeho koeficientov
+
+```{r}
+m = ar.mle(gnp) # metoda maximalnej vierohodnosti
+m
+```
+
+Program dáva AR(3), ktorý má o trochu menšiu sigmu.
+
+
+

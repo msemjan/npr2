@@ -1,0 +1,27 @@
+---
+title: "Príklad"
+author: "Marek"
+date: "March 5, 2019"
+output: html_document
+---
+# Príklad
+$X_t+1.8X_{t-1}+0.81X_{t-2} = Z_t$ kde $Z_t \sim WN(0,\sigma^2)$
+
+Identifikuj o aký ARMA proces ide a zisti, či je invertibilný a kauzálny.
+
+$AR(2)$ lebo $\phi(z) = 1 + 1.8z+0.81z^2$, $\theta(z)=1$ sú charakteristické polynómy. Alebo $\phi_1 = -1.8$, $\phi_2 = -0.81$ sú parametre.
+
+**Kauzalita:** Možnosť vyjadriť n.p. $X_t$ ako lineárnu kombináciu minulých a súčastných zložiek bieleho šumu.
+
+**Invertibilita:** Možnosť vyjadriť n.p. $Z_t$ ako lineárnu kombináciu minulých a súčastných zložiek $X_t$. Z definície, všetky $AR(p)$ procesy sú invertibilné.
+
+**Nutná a postačujúca podmienka kauzality:** Všetky korene charakteristického polynómu musia ležať mimo jednotkového kruhu.
+
+$0.81z^2+1.8z+1=0$
+
+$(0.9z+1)^2 = 0  \iff z=-10/9<-1$, čo je mimo jednotkového kruhu a proces je kauzálny.
+
+# Domáca úloha
+$X_t+1.9X_{t-1}+0.88X_{t-2} = Z_t + 0.2Z_{t-1}+0.7Z_{t-2}$
+
+Identifikuj o aký ARMA proces ide a zisti, či je invertibilný a kauzálny.x  

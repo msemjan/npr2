@@ -1,0 +1,1 @@
+"0","plot(t, dataOsipane, main = 'Počet porazených ošípaných za obdobie január 1985 - August 1995', ylab = 'Počet porazených ošípaných', type ='o')"

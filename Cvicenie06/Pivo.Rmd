@@ -1,0 +1,97 @@
+---
+title: "Produkcia piva"
+output: html_document
+---
+Dáta v súbore pivo.dat predstavujú produkciu piva v miliónoch litrov v Austrálii v období január 1958- december 1990
+
+###Načítanie dát
+```{r }
+pivo <- read.csv2("pivo.dat", sep="")
+str(pivo)
+beer<-pivo$beer
+```
+
+###Zobrazenie ČR
+```{r fig.width=9}
+plot(beer, type="l")
+```
+
+Pozorujeme, že s trendom narastá variabilita, v takých prípadoch je vhodná **logaritmická transformácia**. Tá sa často používa, lebo sa dá ľahko interpretovať. Konkrétne, ak dôjde k prírastku v dátach o 1:
+
+$$1 = \log{y_1} - \log{y_2} = \log{\frac{y_1}{y_2}}$$
+
+A to z definície logaritmov znamená: 
+
+$$\frac{y_1}{y_2} = 10$$
+
+Došlo k 10-násobnému nárastu v pôvodných dátach.
+
+Z aditivity modelu vieme, že 
+
+$$X_t = \mu_t + S_t + \varepsilon_t$$
+
+V ekonomických (a i.) dátach je často výhodnejšie použiť iný model - tzv. multiplikatívny model: 
+
+$$X_t = \mu_tS_t\varepsilon_t$$
+
+Logaritmickou transformáciou sa však vieme dostať od multiplikatívnemu modelu dostať k aditívnemu: 
+
+$$\log{X_t} = log{\mu_t} + \log{S_t} + \log{\varepsilon_t}$$.
+
+```{r fig.width=9}
+lbeer<-log(beer)
+plot(lbeer, type="l", main = "Produkcia austrálskeho piva v období január 1958- december 1990", ylab="logaritmus miliónov litrov")
+```
+
+###Pozorovanie
+* trend
+* sezónna zložka (ekonomický ČR - predpokladáme periódu 12)
+* variabilita po logaritmovaní ustálená
+
+###Odstránenie trendu lineárnou regresiou
+z princípu úspornosti sa núka ako najjednoduchší kvadratický trend. Predpokladáme teda rovnicu v tvare:
+$$\mathrm{ln}(X_t)=a_0+a_1t+a_2t^2+s_t+Y_t$$
+
+###Úloha 
+**Znázornite logaritmované dáta spolu s odhadnutým kvadratickým trendom a zistite koeficienty kvadratického trendu.**
+```{r fig.width=9}
+t<-1:length(beer)
+t2<-t*t
+trend<-lm(lbeer~t+t2)
+plot(t,lbeer, type="o", main = "Produkcia austrálskeho piva v období január 1958- december 1990", ylab="logaritmus miliónov litrov")
+lines(t,predict(trend), col="red", lwd=2)
+coefficients(trend)
+```
+
+###Úloha 
+**Znázornite reziduá po kvadratickom trende.**
+```{r fig.width=9}
+rezidua<-residuals(trend)
+plot(t,rezidua, type="l", main = "Reziduá produkcie austrálskeho piva po odstránení kvadratického trendu")
+abline(0,0)
+
+```
+
+Očakávame, že perióda sezónnej zložky bude 12, takže budeme uvažovať sezónnu zložku v tvare z prednášky:
+$$S_t = \beta\cos{\frac{2\pi}{12}t}+\gamma\sin{\frac{2\pi}{12}t}$$
+
+Nadefinujeme si premenné pre sínus a kosínus. Tento model sa nazýva aj harmonická regresia.
+
+```{r fig.width=91}
+sint = sin(2*pi*t/12)
+cost = cos(2*pi*t/12)
+trendSes <- lm(lbeer~t+t2+sint+cost)
+plot(t,lbeer, type="o", main = "Produkcia austrálskeho piva v období január 1958- december 1990", ylab="logaritmus miliónov litrov")
+lines(t,predict(trendSes), col="red", lwd=2)
+coefficients(trendSes)
+```
+
+## Znázornenie reziduí po po odstránení sezónnej zložky
+
+```{r fig.width=9}
+beerSesRes <- residuals(trendSes)
+plot(t,beerSesRes, type="l", main = "Reziduá produkcie austrálskeho piva po odstránení sezónnej zložky")
+abline(0,0)
+```
+
+V dátach ešte stále vidíme nejakú periodickú zložku. Takže ešte tam zrejme bude prítomná nejaká významná frekvencia, ktorú budeme vedieť odhaliť pomocou periódogramu.

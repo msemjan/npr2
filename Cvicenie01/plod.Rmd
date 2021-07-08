@@ -1,0 +1,37 @@
+---
+title: "vyvinPlodu"
+author: "Marek"
+date: "February 19, 2019"
+output: html_document
+---
+
+# Načítanie dát
+**Dáta zo súboru dieta.DAT, ktoré predstavujú vývin dieťaťa - dĺžku a hmotnosť.**
+```{r}
+dieta <- read.delim2("dieta.txt")
+tyzden <- dieta$tyzden
+dlzka <- dieta$dlzka..cm.
+hmotnost <- dieta$hmotnost..g.
+
+plot(tyzden, dlzka, type = "o", main = "Vývin dieťaťa", xlab = "Týždeň", ylab = "dĺžka [cm]", col = "red")
+```
+
+**Popis časového radu dĺžky:**
+
+* rastúci
+* 2 epizodické zložky
+* bez periodicity
+* minimálna variabilita
+
+
+```{r}
+plot(tyzden, hmotnost, type = "o", main = "Vývin dieťaťa", xlab = "Týždeň", ylab = "hmotnosť [g]", col = "blue")
+```
+
+
+**Popis časového radu hmotnosti:**
+
+* rastúci, nelineárny
+* žiadne epizodické, sezónnej zložky
+* bez periodicity
+* minimálna variabilita

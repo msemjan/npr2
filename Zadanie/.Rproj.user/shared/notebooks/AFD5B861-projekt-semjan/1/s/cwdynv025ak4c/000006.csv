@@ -1,0 +1,3 @@
+"0","modelMA1 = arima(resLm3, order=c(0,0,1))"
+"0","resMA1 = residuals(modelMA1)"
+"0","plot(resMA1, main='Rezidá MA(1) modelu.', type ='o')"

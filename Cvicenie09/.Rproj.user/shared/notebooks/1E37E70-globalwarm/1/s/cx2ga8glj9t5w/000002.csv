@@ -1,0 +1,12 @@
+"0","```r
+jj <- read.delim2(\"jj.dat\", header=FALSE)
+str(jj)
+```"
+"1","'data.frame':	84 obs. of  1 variable:
+ $ V1: Factor w/ 68 levels \" 0.44 \",\" 0.55 \",..: 7 5 12 1 4 6 13 2 8 9 ...
+"
+"0","```r
+jjData <- ts(jj$V1,start = 1960, frequency = 4)
+jjND <- jj$V1
+plot(jjND, type = \"l\", main = \"Johnson & Johnson štvťročné zisky/akciu\", xlab = \"Rok\", ylab = \"Štvrťročný zisk\", col = \"blue\")
+```"
